@@ -12,6 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.ulascan.app.ui.screens.chat.ChatScreen
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.mulishFontFamily
 
@@ -24,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    AppNavHost(navController = rememberNavController())
                 }
             }
         }
@@ -32,18 +37,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
+fun AppNavHost(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    startDestination: String = NavigationItem.Chat.route,
+    ) {
+    NavHost(
+        navController = navController,
         modifier = modifier,
-        style = MaterialTheme.typography.titleLarge
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    UlaScanTheme {
-        Greeting("Android")
+        startDestination = startDestination,
+    ) {
+        composable(NavigationItem.Chat.route) {
+            ChatScreen()
+        }
     }
 }

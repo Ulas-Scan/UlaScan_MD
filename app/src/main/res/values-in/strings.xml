@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">UlaScan</string>
-    <string name="chat_title"> How Can We Help? </string>
-    <string name="history"> History </string>
-    <string name="chat_placeholder"> Enter the product link here </string>
-    <string name="search">Enter keywords</string>
+    <string name="chat_title"> Apa yang Dapat Kami Bantu? </string>
+    <string name="history"> Sejarah </string>
+    <string name="chat_placeholder"> Masukkan link produk disini </string>
+    <string name="search">Masukkan kata kunci</string>
 
     <string-array name="guides">
         <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>
