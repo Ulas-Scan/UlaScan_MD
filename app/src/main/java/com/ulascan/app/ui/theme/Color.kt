@@ -1,5 +1,6 @@
 package com.ulascan.app.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 // Brand
@@ -76,3 +77,15 @@ val D1Chat = Color(0xFF6C7278)
 
 // Keyboard
 val Keyboard = Color(0xFF6C7278)
+
+// Chart
+
+val ChartNegative = Color(0xFF122023)
+val startColor = Color(0xFF84DEA1)
+val middleColor = Color(0xFF4C825D)
+val endColor = Color(0xFF1F4B2D)
+val ChartPositive = Brush.linearGradient(
+    0.0f to startColor,
+    0.5f to middleColor,
+    1.0f to endColor
+)

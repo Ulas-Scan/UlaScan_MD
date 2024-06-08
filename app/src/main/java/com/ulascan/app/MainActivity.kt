@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -17,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ulascan.app.ui.screens.chat.ChatScreen
+import com.ulascan.app.ui.screens.detailAnalysis.DetailAnalysisScreen
+import com.ulascan.app.ui.screens.login.LoginScreen
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.mulishFontFamily
 
