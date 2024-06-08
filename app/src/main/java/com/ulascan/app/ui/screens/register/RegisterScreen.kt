@@ -173,7 +173,7 @@ fun RegisterScreen() {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(text = "Sudah Memiliki akun ? ")
-                        Text(text = "Masuk", fontWeight = FontWeight.Bold )
+                        Text(text = "Masuk", fontWeight = FontWeight.Bold)
                     }
 
                 }

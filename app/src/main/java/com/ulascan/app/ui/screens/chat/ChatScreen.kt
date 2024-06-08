@@ -5,8 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -32,7 +30,7 @@ import kotlin.math.roundToInt
 @Composable
 fun ChatScreen(modifier: Modifier = Modifier) {
     var drawerState by remember { mutableStateOf(DrawerState.Closed) }
-    
+
     var selectedHistoryItem by remember {
         mutableStateOf(
             HistoryItem(
@@ -53,7 +51,7 @@ fun ChatScreen(modifier: Modifier = Modifier) {
         targetValue = if (drawerState.isOpened()) offsetValue else 0.dp,
         label = "Animated Offset"
     )
-    
+
     Box(
         modifier = modifier
             .background(Weak100)

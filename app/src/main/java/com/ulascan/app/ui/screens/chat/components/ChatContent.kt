@@ -36,10 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -89,7 +86,7 @@ fun Header(
 fun ChatField(modifier: Modifier = Modifier) {
     var link by remember { mutableStateOf(TextFieldValue()) }
     var isValidLink by remember { mutableStateOf(true) }
-    
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier

@@ -16,7 +16,7 @@ import com.ulascan.app.ui.theme.UlaScanTheme
 
 @Composable
 fun AppTitle(modifier: Modifier = Modifier) {
-    val text = buildAnnotatedString { 
+    val text = buildAnnotatedString {
         append("Ula")
         withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold)) {
             append("Scan")
@@ -24,8 +24,8 @@ fun AppTitle(modifier: Modifier = Modifier) {
     }
     Text(
         modifier = modifier,
-        text = text, 
-        style = MaterialTheme.typography.titleLarge, 
+        text = text,
+        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Medium,
         textAlign = TextAlign.Center,
         fontSize = 26.sp,
