@@ -1,5 +1,6 @@
 package com.ulascan.app.ui.screens.chat.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -47,8 +48,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.ulascan.app.R
 import com.ulascan.app.ui.components.AppTitle
+import com.ulascan.app.ui.screens.chat.Chat
 import com.ulascan.app.ui.screens.chat.history.DrawerState
 import com.ulascan.app.ui.screens.chat.history.opposite
 import com.ulascan.app.ui.theme.Brand900
@@ -83,14 +87,72 @@ fun Header(
 }
 
 @Composable
-fun ChatField(modifier: Modifier = Modifier) {
+fun Guides(guides: List<String>, modifier: Modifier = Modifier) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = modifier.padding(horizontal = 8.dp)
+    ) {
+        items(guides.size) { index ->
+            Guide(guides[index])
+        }
+
+    }
+}
+
+@Composable
+fun ChatPreview(modifier: Modifier = Modifier) {
+    val guides = stringArrayResource(id = R.array.guides).toList()
+
+    Column(
+        modifier = modifier.padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(32.dp))
+        Image(
+            painter = painterResource(id = R.drawable.logo_item),
+            contentDescription = stringResource(id = R.string.app_name),
+            modifier = modifier
+                .size(100.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(id = R.string.chat_title),
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.ExtraBold,
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Column(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Guides(guides)
+        }
+    }
+}
+
+@Composable
+fun ChatMessages(messages: List<Chat.Message>, modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier
+            .padding(32.dp)
+    ) {
+        items(messages.size) { index ->
+            Text(text = messages[index].text)
+        }
+    }
+}
+
+@Composable
+fun ChatField(modifier: Modifier = Modifier, onSendChatClickListener: (Chat.Message) -> Unit) {
     var link by remember { mutableStateOf(TextFieldValue()) }
     var isValidLink by remember { mutableStateOf(true) }
-
+    
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background),
         horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {
@@ -123,7 +185,7 @@ fun ChatField(modifier: Modifier = Modifier) {
                     imeAction = ImeAction.Done
                 ),
                 modifier = modifier
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                    .padding(horizontal = 12.dp, vertical = 2.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.Transparent,
                     focusedBorderColor = Color.Transparent,
@@ -136,15 +198,22 @@ fun ChatField(modifier: Modifier = Modifier) {
         }
         Box {
             Button(
-                onClick = { /*TODO*/ },
-                enabled = isValidLink,
+                onClick = {
+                    onSendChatClickListener(
+                        Chat.Message(
+                            isResponse = false,
+                            text = link.text,
+                        )
+                    )
+                },
+                enabled = isValidLink && link.text.isNotEmpty(),
                 modifier = Modifier
                     .size(56.dp)
                     .clip(CircleShape),
                 shape = CircleShape,
                 contentPadding = PaddingValues(1.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isValidLink) Brand900 else Color.Gray,
+                    containerColor = if (isValidLink && link.text.isNotEmpty()) Brand900 else Color.Gray,
                 )
             ) {
                 Icon(
@@ -158,67 +227,61 @@ fun ChatField(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Guides(guides: List<String>, modifier: Modifier = Modifier) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = modifier
-    ) {
-        items(guides.size) { index ->
-            Guide(guides[index])
-        }
-
-    }
-}
-
-@Composable
 fun ChatContent(
     modifier: Modifier = Modifier,
     drawerState: DrawerState,
-    onDrawerClick: (DrawerState) -> Unit
+    onDrawerClick: (DrawerState) -> Unit,
+    chat: Chat,
+    onSendChatClickListener: (Chat.Message) -> Unit
 ) {
-    val guides = stringArrayResource(id = R.array.guides).toList()
-    val scrollState = rememberScrollState()
-
-    Column(
+    ConstraintLayout(
         modifier = modifier
             .fillMaxHeight()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val (header, content, chatField) = createRefs()
+        
         Header(
             drawerState = drawerState,
             onDrawerClick = onDrawerClick,
+            modifier = Modifier
+                .constrainAs(header) {
+                    top.linkTo(parent.top, margin = 32.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .padding(horizontal = 16.dp)
         )
-        Spacer(modifier.weight(1f))
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
-            Image(
-                painter = painterResource(id = R.drawable.logo_item),
-                contentDescription = stringResource(id = R.string.app_name),
-                modifier = modifier
-                    .size(100.dp)
+        
+        if(chat.messages.isEmpty()) {
+            ChatPreview(
+                modifier = Modifier.constrainAs(content) {
+                    top.linkTo(header.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(chatField.top)
+                }
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(id = R.string.chat_title),
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.ExtraBold,
+        } else {
+            ChatMessages(
+                messages = chat.messages,
+                modifier = Modifier.constrainAs(content) {
+                    top.linkTo(header.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(chatField.top)
+                    height = Dimension.fillToConstraints
+                }
             )
-            Column(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Guides(guides)
-            }
         }
-        Spacer(modifier.weight(1f))
-        ChatField()
+        
+        ChatField(
+            modifier = Modifier.constrainAs(chatField) {
+                bottom.linkTo(parent.bottom, margin = 32.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            },
+            onSendChatClickListener = onSendChatClickListener
+        )
     }
 }
 
@@ -230,7 +293,12 @@ fun ChatContentPreview() {
             drawerState = DrawerState.Closed,
             onDrawerClick = {},
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
+            chat = Chat(
+                messages = emptyList(),
+                chatId = "chat-ebs123",
+            ),
+            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }
         )
     }
 }
