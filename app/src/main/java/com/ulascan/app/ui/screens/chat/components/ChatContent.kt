@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -137,10 +136,19 @@ fun ChatPreview(modifier: Modifier = Modifier) {
 fun ChatMessages(messages: List<Chat.Message>, modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
-            .padding(32.dp)
+            .padding(32.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(messages.size) { index ->
-            Text(text = messages[index].text)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                if(messages[index].isResponse) {
+                    ResponseMessage()
+                } else {
+                    UserMessage(messages[index].text)
+                }
+            }
         }
     }
 }
@@ -267,7 +275,6 @@ fun ChatContent(
                 modifier = Modifier.constrainAs(content) {
                     top.linkTo(header.bottom)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end)
                     bottom.linkTo(chatField.top)
                     height = Dimension.fillToConstraints
                 }
@@ -296,6 +303,35 @@ fun ChatContentPreview() {
                 .background(MaterialTheme.colorScheme.background),
             chat = Chat(
                 messages = emptyList(),
+                chatId = "chat-ebs123",
+            ),
+            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun ChatContentWithMessagePreview() {
+    val num = 40  // Number of items to create
+    val messages = mutableListOf<Chat.Message>()
+
+    for (i in 1..num) {
+        val message = Chat.Message(
+            isResponse = i%2 == 0,
+            text = "https://www.tokopedia.com/iceler/cafelercoffeemaker-2-boiler-sistem-mesin-kopi-espresso-grinder-58mm-beige-00829?extParam=ivf%3Dtrue&src=topads $i"
+        )
+        messages.add(message)
+    }
+    
+    UlaScanTheme {
+        ChatContent(
+            drawerState = DrawerState.Closed,
+            onDrawerClick = {},
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background),
+            chat = Chat(
+                messages = messages,
                 chatId = "chat-ebs123",
             ),
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }

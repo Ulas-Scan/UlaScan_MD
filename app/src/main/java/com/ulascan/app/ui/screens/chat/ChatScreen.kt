@@ -93,16 +93,30 @@ fun ChatScreenPreview() {
     UlaScanTheme {
         val chat = Chat(
             chatId = "chat-ebs123",
-            messages = listOf(
-                Chat.Message("Hello", false),
-                Chat.Message("Hi", true),
-                Chat.Message("How are you?", false),
-                Chat.Message("I'm good, thanks!", true),
-                Chat.Message("What's new?", false),
-                Chat.Message("Nothing much", true),
-                Chat.Message("Ok, bye!", false),
-                Chat.Message("Bye!", true),
-            )
+            messages = emptyList()
+        )
+        ChatScreen(chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") })
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun ChatScreenWithMessagePreview() {
+    val num = 40  // Number of items to create
+    val messages = mutableListOf<Chat.Message>()
+
+    for (i in 1..num) {
+        val message = Chat.Message(
+            isResponse = i%2 == 0,
+            text = "Message number $i"
+        )
+        messages.add(message)
+    }
+    
+    UlaScanTheme {
+        val chat = Chat(
+            chatId = "chat-ebs123",
+            messages = messages
         )
         ChatScreen(chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") })
     }
