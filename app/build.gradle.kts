@@ -18,7 +18,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "API_BASE_URL", "\"http://127.0.0.1:8080/api/\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://34.101.79.15/api/\"")
     }
 
     buildTypes {
@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.constraintlayout.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -64,6 +66,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofitGson)
     implementation(libs.loggingInterceptor)
+    implementation(libs.iconsax)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

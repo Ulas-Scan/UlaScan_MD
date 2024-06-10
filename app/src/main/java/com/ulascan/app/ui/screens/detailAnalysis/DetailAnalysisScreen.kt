@@ -1,11 +1,9 @@
 package com.ulascan.app.ui.screens.detailAnalysis
 
 
-import android.provider.Telephony.Mms.Sent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,8 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ulascan.app.R
@@ -311,11 +307,10 @@ fun DetailAnalysisScreen(scrollState: ScrollState) {
                         .fillMaxWidth()
                         .clip(shape = RoundedCornerShape(20.dp))
                         .background(Color.White)
-                        .padding(16.dp)
-                    ,
+                        .padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                     verticalAlignment = Alignment.CenterVertically
-                    ) {
+                ) {
 
                     NormalPieChart(
                         data = mapOf(
@@ -340,7 +335,7 @@ fun DetailAnalysisScreen(scrollState: ScrollState) {
 }
 
 @Composable
-fun SentimentAnalysis(){
+fun SentimentAnalysis() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -348,14 +343,15 @@ fun SentimentAnalysis(){
             .background(Color.White)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+    ) {
         SentimentItems()
         SentimentItems()
         SentimentItems()
     }
 }
+
 @Composable
-fun SentimentItems(){
+fun SentimentItems() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -364,7 +360,7 @@ fun SentimentItems(){
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
-        ) {
+    ) {
 
         CircleWithNumber(number = 90)
 
@@ -375,17 +371,21 @@ fun SentimentItems(){
             ,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(text = "Packaging",
+            Text(
+                text = "Packaging",
                 color = Color.Black,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Start)
+                textAlign = TextAlign.Start
+            )
 
-            Text(text = "90% of buyers are satisfied regarding packaging safety.",
+            Text(
+                text = "90% of buyers are satisfied regarding packaging safety.",
                 color = Color.Black,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Start)
+                textAlign = TextAlign.Start
+            )
         }
     }
 }

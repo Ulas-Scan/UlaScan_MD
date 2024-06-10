@@ -189,28 +189,28 @@ fun NormalPieChart(
         animationPlayed = true
     }
 
-        Box(
-            modifier = Modifier.size(animateSize.dp),
-            contentAlignment = Alignment.Center
+    Box(
+        modifier = Modifier.size(animateSize.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(
+            modifier = Modifier
+                .offset { IntOffset.Zero }
+                .size(radiusOuter * 2f)
+                .rotate(animateRotation)
         ) {
-            Canvas(
-                modifier = Modifier
-                    .offset { IntOffset.Zero }
-                    .size(radiusOuter * 2f)
-                    .rotate(animateRotation)
-            ) {
-                // draw each Arc for each data entry in Pie Chart
-                floatValue.forEachIndexed { index, value ->
-                    drawArc(
-                        color = colors[index],
-                        lastValue + 90f,
-                        value,
-                        useCenter = false,
-                        style = Stroke(chartBarWidth, cap = StrokeCap.Butt)
-                    )
-                    lastValue += value
-                }
+            // draw each Arc for each data entry in Pie Chart
+            floatValue.forEachIndexed { index, value ->
+                drawArc(
+                    color = colors[index],
+                    lastValue + 90f,
+                    value,
+                    useCenter = false,
+                    style = Stroke(chartBarWidth, cap = StrokeCap.Butt)
+                )
+                lastValue += value
             }
+        }
 
         // To see the data in more structured way
         // Compose Function in which Items are showing data

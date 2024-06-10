@@ -72,6 +72,12 @@ val Information100 = Color(0xFFCEE6FE)
 // Weak
 val Weak100 = Color(0xFFF6F8FA)
 
+// Label
+val D1Chat = Color(0xFF6C7278)
+
+// Keyboard
+val Keyboard = Color(0xFF6C7278)
+
 // Chart
 
 val ChartNegative = Color(0xFF122023)

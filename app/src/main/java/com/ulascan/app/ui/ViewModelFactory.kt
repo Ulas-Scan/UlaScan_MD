@@ -13,6 +13,7 @@ class ViewModelFactory private constructor(private val applicationContext: Conte
         InitialViewModel::class.java -> InitialViewModel() as T
         else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
+
     companion object {
         @Volatile
         private var instance: ViewModelFactory? = null
