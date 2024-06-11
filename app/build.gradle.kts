@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidxDatastorePreferences)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)

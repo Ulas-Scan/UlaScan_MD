@@ -1,4 +1,4 @@
-package com.ulascan.app.ui.screens.register
+package com.ulascan.app.ui.screens.auth.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -35,10 +39,12 @@ import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen() {
+fun LoginScreen() {
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
@@ -47,80 +53,56 @@ fun RegisterScreen() {
                 .background(Brand900)
                 .align(Alignment.TopCenter)
         ) {
-            // Empty Column to provide the background
         }
 
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo_ulascan2),
+                painter = painterResource(id = R.drawable.logo_ulascan),
                 contentDescription = "Ulascan Logo",
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier
+                    .size(120.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Daftarkan Dirimu !",
+                text = "Masuk Ke Akunmu!",
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = Color.White,
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Masukkan datamu untuk mendaftar\n pada aplikasi ini!",
+                text = "Masukkan email dan kata sandi untuk\n masuk ke akunmu",
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp))
+                    .fillMaxWidth(0.85f)
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp))
                     .clip(RoundedCornerShape(16.dp))
                     .background(Weak100)
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier
+                        .padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-
-
-                    Text(text = "Nama Lengkap")
-                    Box(
-                        modifier = Modifier
-                            .shadow(elevation = 8.dp, shape = RoundedCornerShape(36.dp))
-                            .clip(RoundedCornerShape(30.dp))
-                            .background(Weak100)
-                    ) {
-                        OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
-                            label = { Text(text = "Masukkan Nama Anda") },
-                            shape = RoundedCornerShape(30.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .offset(y = (-4).dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                focusedTextColor = Color.Transparent,
-                                focusedLabelColor = Color.Transparent,
-                            )
-                        )
-                    }
 
                     Text(text = "Email")
                     Box(
                         modifier = Modifier
                             .shadow(elevation = 8.dp, shape = RoundedCornerShape(36.dp))
-                            .clip(RoundedCornerShape(30.dp))
+                            .clip(RoundedCornerShape(36.dp))
                             .background(Weak100)
                     ) {
                         OutlinedTextField(
@@ -129,8 +111,8 @@ fun RegisterScreen() {
                             label = { Text(text = "Masukkan Email Anda") },
                             shape = RoundedCornerShape(30.dp),
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .offset(y = (-4).dp),
+                                .height(48.dp)
+                                .offset(y = (-13).dp),
                             colors = OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor = Color.Transparent,
                                 focusedBorderColor = Color.Transparent,
@@ -155,7 +137,8 @@ fun RegisterScreen() {
                             shape = RoundedCornerShape(30.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .offset(y = (-4).dp),
+                                .height(48.dp)
+                                .offset(y = (-13).dp),
                             colors = OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor = Color.Transparent,
                                 focusedBorderColor = Color.Transparent,
@@ -167,13 +150,24 @@ fun RegisterScreen() {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+//                    Button(onClick = {
+//                        viewModel.registerUser(name, email, password)
+//                    },
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(48.dp),
+//                        colors = ButtonDefaults.buttonColors(containerColor = Brand900),
+//                            ) {
+//                        Text(text = "Masuk")
+//                    }
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
 
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Sudah Memiliki akun ? ")
-                        Text(text = "Masuk", fontWeight = FontWeight.Bold)
+                        Text(text = "Belum Memiliki akun ? ")
+                        Text(text = "Daftar", fontWeight = FontWeight.Bold)
                     }
 
                 }
@@ -184,8 +178,8 @@ fun RegisterScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun RegisterPreview() {
+fun LoginPreview() {
     UlaScanTheme {
-        RegisterScreen()
+        LoginScreen()
     }
 }

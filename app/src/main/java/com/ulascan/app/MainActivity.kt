@@ -12,17 +12,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ulascan.app.ui.screens.chat.Chat
 import com.ulascan.app.ui.screens.chat.ChatScreen
 import com.ulascan.app.ui.screens.chat.ChatViewModel
+import com.ulascan.app.ui.screens.auth.register.RegisterScreen
+import com.ulascan.app.ui.screens.auth.register.RegisterViewModel
 import com.ulascan.app.ui.theme.UlaScanTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             UlaScanTheme {
                 Surface(
@@ -40,23 +45,31 @@ class MainActivity : ComponentActivity() {
 fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    startDestination: String = NavigationItem.Chat.route,
+//    startDestination: String = NavigationItem.Chat.route,
+    startDestination: String = NavigationItem.Register.route
 ) {
     NavHost(
         navController = navController,
         modifier = modifier,
         startDestination = startDestination,
     ) {
+        composable(NavigationItem.Register.route) {
+            val registerViewModel = viewModel<RegisterViewModel>()
+
+            RegisterScreen(registerViewModel, navController)
+        }
+        composable(NavigationItem.Login.route){
+        }
         composable(NavigationItem.Chat.route) {
             val chatViewModel = viewModel<ChatViewModel>()
             val conversation = chatViewModel.conversation.collectAsState()
-            
+
             ChatScreen(
                 chat = Chat(
                     messages = conversation.value,
                     chatId = "chat-ebs123",
                 ),
-                onSendChatClickListener = { message -> chatViewModel.sendMessage(message) } 
+                onSendChatClickListener = { message -> chatViewModel.sendMessage(message) }
             )
         }
     }
