@@ -68,7 +68,12 @@ dependencies {
     implementation(libs.retrofitGson)
     implementation(libs.loggingInterceptor)
     implementation(libs.iconsax)
-    
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.lifecycleViewModelKtx)
+    implementation(libs.lifecycleLiveDataKtx)
+    implementation(libs.coroutinesCore)
+    implementation(libs.coroutinesAndroid)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

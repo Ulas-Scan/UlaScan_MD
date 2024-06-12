@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,9 +47,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ulascan.app.NavigationItem
 import com.ulascan.app.R
 import com.ulascan.app.data.remote.UserPreferences
 import com.ulascan.app.ui.ViewModelFactory
+import com.ulascan.app.ui.screens.auth.FormInput
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
@@ -61,7 +64,17 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
 
 
-//    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    LaunchedEffect(uiState) {
+        if (uiState is RegisterUiState.Success) {
+            name = ""
+            email = ""
+            password = ""
+            navController.navigate("login") {
+                popUpTo("register") { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -116,111 +129,36 @@ fun RegisterScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
 
+                    FormInput(
+                        title = "Nama Lengkap",
+                        value = name,
+                        onValueChange = { name = it },
+                        label = "Masukkan Nama Lengkap Anda",
+                    )
 
-                    Text(text = "Nama Lengkap")
-                    Box(
-                        modifier = Modifier
-                            .shadow(elevation = 8.dp, shape = RoundedCornerShape(36.dp))
-                            .clip(RoundedCornerShape(30.dp))
-                            .background(Weak100)
-                    ) {
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = {name = it},
-                            label = {
-                                if (name.isNotBlank()) {
-                                    Text(text = "")
-                                } else {
-                                    Text(text = "Masukkan Nama Anda")
-                                }
-                            },
-                            shape = RoundedCornerShape(30.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .offset(y = (-4).dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                focusedTextColor = Color.Black,
-                                focusedLabelColor = Color.Transparent,
-                                unfocusedSupportingTextColor = Color.Transparent
-                            )
-                        )
-                    }
-
-                    Text(text = "Email")
-                    Box(
-                        modifier = Modifier
-                            .shadow(elevation = 8.dp, shape = RoundedCornerShape(36.dp))
-                            .clip(RoundedCornerShape(30.dp))
-                            .background(Weak100)
-                    ) {
-                        OutlinedTextField(
-                            value = email,
-                            onValueChange = {email = it},
-                            label = {
-                                if (email.isNotBlank()) {
-                                    Text(text = "")
-                                } else {
-                                    Text(text = "Masukkan Email Anda")
-                                }
-                            },
-                            shape = RoundedCornerShape(30.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .offset(y = (-4).dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                focusedTextColor = Color.Black,
-                                focusedLabelColor = Color.Transparent,
-                                unfocusedSupportingTextColor = Color.Transparent
-                            )
-                        )
-                    }
+                    FormInput(
+                        title = "Email",
+                        value = email,
+                        onValueChange = { email = it },
+                        label = "Masukkan Email Anda",
+                    )
 
 
-                    Text(text = "Kata Sandi")
-                    Box(
-                        modifier = Modifier
-                            .shadow(elevation = 8.dp, shape = RoundedCornerShape(36.dp))
-                            .clip(RoundedCornerShape(30.dp))
-                            .background(Weak100)
-                    ) {
-                        OutlinedTextField(
-                            value = password,
-                            onValueChange = {password = it},
-                            label = {
-                                if (password.isNotBlank()) {
-                                    Text(text = "")
-                                } else {
-                                    Text(text = "Masukkan Kata Sandi Anda")
-                                }
-                            },
-                            shape = RoundedCornerShape(30.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .offset(y = (-4).dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                focusedTextColor = Color.Black,
-                                focusedLabelColor = Color.Transparent,
-                                unfocusedSupportingTextColor = Color.Transparent
-                            ),
-                            visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password,
-                                imeAction = ImeAction.Done
-                            )
-
-                        )
-                    }
+                    FormInput(
+                        title = "Kata Sandi",
+                        value = password,
+                        onValueChange = { password = it },
+                        label = "Masukkan Kata Sandi Anda",
+                        isPassword = true
+                    )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Button(onClick = {
                         viewModel.registerUser(name, email, password)
+                        name = ""
+                        email = ""
+                        password = ""
                     },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -236,7 +174,7 @@ fun RegisterScreen(
                     ) {
                         Text(text = "Sudah Memiliki akun ? ")
                         Text(text = "Masuk", fontWeight = FontWeight.Bold,
-                            modifier = Modifier.clickable { navController.navigate("login")})
+                            modifier = Modifier.clickable { navController.navigate(NavigationItem.Login.route)})
                     }
                 }
             }
