@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,7 +44,6 @@ import com.ulascan.app.R
 import com.ulascan.app.ui.screens.auth.FormInput
 import com.ulascan.app.ui.screens.auth.register.LoginUiState
 import com.ulascan.app.ui.screens.auth.register.LoginViewModel
-import com.ulascan.app.ui.screens.auth.register.RegisterUiState
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
