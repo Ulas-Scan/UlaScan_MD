@@ -2,7 +2,6 @@ package com.ulascan.app.ui.screens.initial
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,10 +10,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,13 +19,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.ulascan.app.NavigationItem
 import com.ulascan.app.R
 import com.ulascan.app.ui.theme.Brand100
 import com.ulascan.app.ui.theme.Brand900
@@ -36,11 +34,10 @@ import com.ulascan.app.ui.theme.UlaScanTheme
 
 
 @Composable
-fun InitialScreen() {
+fun InitialScreen(navController: NavController = rememberNavController()) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Top section
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,7 +50,7 @@ fun InitialScreen() {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.iphone_cut),
+                    painter = painterResource(id = R.drawable.iphone_cut_hdpi),
                     contentDescription = "Ulascan Logo",
                     modifier = Modifier
                         .size(400.dp)
@@ -65,11 +62,9 @@ fun InitialScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.35f)
-//                .background(Color.Black)
                 .align(Alignment.BottomCenter)
             ,
         ) {
-            // Your content for the bottom section goes here
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,6 +91,7 @@ fun InitialScreen() {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(onClick = {
+                    navController.navigate(NavigationItem.Register.route)
                 },
                     modifier = Modifier
                         .fillMaxWidth()

@@ -1,6 +1,7 @@
 package com.ulascan.app.data.remote
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 
 class UserRepository(private val userPreferences: UserPreferences) {
@@ -17,4 +18,8 @@ class UserRepository(private val userPreferences: UserPreferences) {
         userPreferences.clearToken()
     }
 
+    suspend fun isUserLoggedIn(): Boolean {
+        val token = userPreferences.getToken().first()
+        return !token.isNullOrEmpty()
+    }
 }
