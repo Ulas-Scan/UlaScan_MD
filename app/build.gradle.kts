@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidxDatastorePreferences)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -67,7 +68,12 @@ dependencies {
     implementation(libs.retrofitGson)
     implementation(libs.loggingInterceptor)
     implementation(libs.iconsax)
-    
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.lifecycleViewModelKtx)
+    implementation(libs.lifecycleLiveDataKtx)
+    implementation(libs.coroutinesCore)
+    implementation(libs.coroutinesAndroid)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
