@@ -91,7 +91,7 @@ fun InitialScreen(navController: NavController = rememberNavController()) {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(onClick = {
-                    navController.navigate(NavigationItem.DetailAnalysis.route)
+                    navController.navigate(NavigationItem.Chat.route)
                 },
                     modifier = Modifier
                         .fillMaxWidth()

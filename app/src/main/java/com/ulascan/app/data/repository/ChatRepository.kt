@@ -7,9 +7,6 @@ import com.ulascan.app.utils.getErrorMessage
 import retrofit2.HttpException
 
 class ChatRepository(private val apiService: ApiService) {
-    fun test(): String {
-        return "test"
-    }
 
     suspend fun getGuestAnalysis(productUrl: String): ResultState<AnalysisResponse> {
         return try {

@@ -18,11 +18,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.ulascan.app.data.remote.response.Chat
 import com.ulascan.app.ui.ViewModelFactory
 import com.ulascan.app.data.remote.UserPreferences
 import com.ulascan.app.data.remote.UserRepository
 import com.ulascan.app.data.remote.dataStore
+import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.ui.screens.auth.LoginViewModelFactory
 import com.ulascan.app.ui.screens.auth.login.LoginScreen
 import com.ulascan.app.ui.screens.auth.register.LoginViewModel
@@ -33,6 +35,7 @@ import com.ulascan.app.ui.screens.chat.ChatViewModel
 import com.ulascan.app.ui.screens.detailAnalysis.DetailAnalysisScreen
 import com.ulascan.app.ui.screens.initial.InitialScreen
 import com.ulascan.app.ui.theme.UlaScanTheme
+import kotlin.reflect.typeOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,11 +106,18 @@ class MainActivity : ComponentActivity() {
                         messages = conversation.value,
                     ),
                     onSendChatClickListener = { message -> chatViewModel.sendMessage(message) },
-                    onCancelChatClickListener = { chatViewModel.cancelRequest() }
+                    onCancelChatClickListener = { chatViewModel.cancelRequest() },
+                    onAnalyzeRouteNavigation = { 
+                        data: AnalysisData -> navController.navigate(data)
+                    } 
                 )
             }
-            composable("${NavigationItem.DetailAnalysis.route}/{id}") {
-                DetailAnalysisScreen(navController)
+            composable<AnalysisData> (
+                typeMap = mapOf(typeOf<Double>() to DoubleType)
+            ){ backStackEntry ->
+                val data: AnalysisData = backStackEntry.toRoute()
+                
+                DetailAnalysisScreen(navController, data)
             }
         }
     }

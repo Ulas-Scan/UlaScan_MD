@@ -1,6 +1,9 @@
 package com.ulascan.app.data.remote.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 data class Chat(
     val messages: List<Message>
@@ -15,56 +18,58 @@ data class Chat(
 data class AnalysisResponse(
 
     @field:SerializedName("data")
-    val data: AnalysisData? = null,
+    val data: AnalysisData,
 
     @field:SerializedName("message")
-    val message: String? = null,
+    val message: String,
 
     @field:SerializedName("status")
-    val status: Boolean? = null
+    val status: Boolean
 )
 
+@Serializable
+@Parcelize
 data class AnalysisData(
 
     @field:SerializedName("count_positive")
-    val countPositive: Int? = null,
+    val countPositive: Int,
 
     @field:SerializedName("summary")
-    val summary: String? = null,
+    val summary: String,
 
     @field:SerializedName("delivery")
-    val delivery: Any? = null,
+    val delivery: Double,
 
     @field:SerializedName("admin_response")
-    val adminResponse: Any? = null,
-
-    @field:SerializedName("product_condition")
-    val productCondition: Any? = null,
-
+    val adminResponse: Double,
+    
     @field:SerializedName("rating")
-    val rating: Any? = null,
+    val rating: Int,
 
     @field:SerializedName("image_urls")
-    val imageUrls: List<String?>? = null,
+    val imageUrls: List<String>,
 
     @field:SerializedName("packaging")
-    val packaging: Any? = null,
+    val packaging: Double,
 
     @field:SerializedName("shop_name")
-    val shopName: String? = null,
+    val shopName: String,
 
     @field:SerializedName("product_name")
-    val productName: String? = null,
+    val productName: String,
 
     @field:SerializedName("ulasan")
-    val ulasan: Any? = null,
+    val ulasan: Int,
 
     @field:SerializedName("count_negative")
-    val countNegative: Int? = null,
+    val countNegative: Int,
 
     @field:SerializedName("product_description")
-    val productDescription: String? = null,
+    val productDescription: String,
 
     @field:SerializedName("bintang")
-    val bintang: Any? = null
-)
+    val bintang: Double,
+
+    @field:SerializedName("product_condition")
+    val productCondition: Double,
+) : Parcelable

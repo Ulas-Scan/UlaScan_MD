@@ -1,13 +1,15 @@
 [versions]
 agp = "8.3.0"
 kotlin = "1.9.0"
+kotlinSerialization = "1.6.1"
+kotlinSerializationPlugins = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.8.0"
 activityCompose = "1.9.0"
-navigationCompose = "2.7.7"
+navigationCompose = "2.8.0-alpha08"
 constraintlayoutCompose = "1.0.1"
 composeBom = "2023.08.00"
 retrofit = "2.10.0"
@@ -53,8 +55,10 @@ lifecycleLiveDataKtx = { group = "androidx.lifecycle", name = "lifecycle-livedat
 coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 jetpackLoading = { group = "com.ehsanmsz", name = "msz-progress-indicator", version.ref = "jetpackLoading"}
+kotlinSerialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerializationPlugins" }
+jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinSerializationPlugins" }

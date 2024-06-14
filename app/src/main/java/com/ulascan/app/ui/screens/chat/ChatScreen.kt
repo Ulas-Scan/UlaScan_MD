@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.data.remote.response.Chat
 import com.ulascan.app.data.remote.response.ResultState
 import com.ulascan.app.ui.screens.chat.components.ChatContent
@@ -31,7 +32,7 @@ import com.ulascan.app.ui.theme.Weak100
 import kotlin.math.roundToInt
 
 @Composable
-fun ChatScreen(uiState: ResultState<Nothing>, chat: Chat, onSendChatClickListener: (Chat.Message) -> Unit, onCancelChatClickListener: () -> Unit, modifier: Modifier = Modifier) {
+fun ChatScreen(uiState: ResultState<Nothing>, chat: Chat, onSendChatClickListener: (Chat.Message) -> Unit, onCancelChatClickListener: () -> Unit, onAnalyzeRouteNavigation: (AnalysisData) -> Unit, modifier: Modifier = Modifier) {
     var drawerState by remember { mutableStateOf(DrawerState.Closed) }
     
     var selectedHistoryItem by remember {
@@ -80,6 +81,7 @@ fun ChatScreen(uiState: ResultState<Nothing>, chat: Chat, onSendChatClickListene
             chat = chat,
             onSendChatClickListener = onSendChatClickListener,
             onCancelChatClickListener = onCancelChatClickListener,
+            onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
             modifier = Modifier
                 .offset(x = animatedOffset)
         )
@@ -93,7 +95,7 @@ fun ChatScreenPreview() {
         val chat = Chat(
             messages = emptyList()
         )
-        ChatScreen(uiState = ResultState.Default, chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") } )
+        ChatScreen(uiState = ResultState.Default, chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },  onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") } )
     }
 }
 
@@ -115,6 +117,6 @@ fun ChatScreenWithMessagePreview() {
         val chat = Chat(
             messages = messages
         )
-        ChatScreen(uiState = ResultState.Default, chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") })
+        ChatScreen(uiState = ResultState.Default, chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },  onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") })
     }
 }

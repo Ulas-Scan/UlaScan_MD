@@ -1,11 +1,7 @@
 package com.ulascan.app.ui.screens.chat
 
-import androidx.compose.runtime.MutableState
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.data.remote.response.Chat
 import com.ulascan.app.data.remote.response.ResultState
 import com.ulascan.app.data.repository.ChatRepository

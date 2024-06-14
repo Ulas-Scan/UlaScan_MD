@@ -38,14 +38,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ulascan.app.R
+import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.ui.theme.Brand200
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.Neutral900
 import com.ulascan.app.ui.theme.UlaScanTheme
+import com.ulascan.app.utils.Helper
+import com.ulascan.app.utils.castTo
+import com.ulascan.app.utils.castToDoubleThenToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DetailAnalysisScreen(navController: NavController = rememberNavController()) {
+fun DetailAnalysisScreen(navController: NavController = rememberNavController(), data: AnalysisData) {
     val scrollState = rememberLazyListState()
     val backgroundColor by remember {
         derivedStateOf {
@@ -72,12 +76,12 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController())
                 )
         ) {
             stickyHeader {
-                HeaderRow(navController, title = "Produk makanan ini judul produk ditaruh sini ya", backgroundColor)
+                HeaderRow(navController, title = data.productName, backgroundColor)
             }
             items(1) {
                 Column(modifier = Modifier.padding(horizontal = 16.dp)) {
 
-                    PieChart(data = mapOf("Review Positif" to 78, "Review Negatif" to 22))
+                    PieChart(data = mapOf("Review Positif" to data.countPositive, "Review Negatif" to data.countNegative))
 
                     Box(
                         modifier = Modifier
@@ -86,7 +90,7 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController())
                             .background(Color.White)
                     ) {
                         Text(
-                            text = "80% of buyers are satisfied \nwith purchasing the product overall",
+                            text = "${(data.countPositive.toDouble()/(data.countPositive + data.countNegative))*100}% of buyers are satisfied \nwith purchasing the product overall",
                             color = Brand900,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
@@ -99,7 +103,7 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController())
 
                     Spacer(modifier = Modifier.size(16.dp))
 
-                    ProductStats(rating = 17, stars = 4.8f, reviews = 99)
+                    ProductStats(rating = data.rating, stars = data.bintang.castTo<Double>(), reviews = data.ulasan)
 
                     Spacer(modifier = Modifier.size(16.dp))
 
@@ -122,7 +126,7 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController())
                                 .padding(bottom = 8.dp)
                         )
                         Text(
-                            text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry...",
+                            text = data.summary,
                             color = Neutral900,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
@@ -133,7 +137,7 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController())
 
                     Spacer(modifier = Modifier.size(16.dp))
 
-                    SentimentAnalysis()
+                    SentimentAnalysis(packaging = data.packaging.castToDoubleThenToInt(), delivery = data.delivery.castToDoubleThenToInt(), adminResponse = data.adminResponse.castToDoubleThenToInt())
 
                     Spacer(modifier = Modifier.size(16.dp))
 
@@ -165,10 +169,10 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController())
                             horizontalArrangement = Arrangement.spacedBy(20.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            NormalPieChart(data = mapOf("Sample-1" to 50, "Sample-2" to 50))
+                            NormalPieChart(data = mapOf("Sample-1" to (100-data.productCondition.toInt()), "Sample-2" to data.productCondition.toInt()))
 
                             Text(
-                                text = "50% say that the item is not defective at all and functions well.",
+                                text = "${data.productCondition.toInt()}% say that the item is not defective at all and functions well.",
                                 color = Neutral900,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
@@ -227,7 +231,7 @@ fun HeaderRow(navController: NavController, title: String, backgroundColor: Colo
 }
 @Composable
 fun ProductStats(
-    rating: Int, stars:Float, reviews: Int
+    rating: Int, stars:Double, reviews: Int
 ){
     Row(
         modifier = Modifier
@@ -343,7 +347,7 @@ fun ProductStats(
 
 
 @Composable
-fun SentimentAnalysis() {
+fun SentimentAnalysis(packaging: Int, delivery: Int, adminResponse: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -353,13 +357,13 @@ fun SentimentAnalysis() {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         SentimentItems(
-        percentage = 90, title = "Packaging", content = "90% pembeli puas dengan pekejing"
+        percentage = packaging, title = "Packaging", content = "$packaging% pembeli puas dengan pekejing"
         )
         SentimentItems(
-            percentage = 70, title = "fungsi", content = "70% pembeli puas dengan fungsi barang"
+            percentage = delivery, title = "fungsi", content = "$delivery% pembeli puas dengan fungsi barang"
         )
         SentimentItems(
-            percentage = 80, title = "gatau", content = "80% pembeli gatau ini barang apa"
+            percentage = adminResponse, title = "gatau", content = "$adminResponse% pembeli gatau ini barang apa"
         )
     }
 }
@@ -427,7 +431,8 @@ fun CircleWithNumber(
 @Preview(showBackground = true)
 @Composable
 fun DetailAnalysisPreview() {
+    val data = Helper.generateAnalysisData()
     UlaScanTheme {
-        DetailAnalysisScreen()
+        DetailAnalysisScreen(data = data)
     }
 }
