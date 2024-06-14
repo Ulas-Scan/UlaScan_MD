@@ -13,9 +13,14 @@ composeBom = "2023.08.00"
 retrofit = "2.10.0"
 okhttp3 = "4.9.1"
 iconsax = "1.0.0"
+androidxDatastore = "1.1.1"
+constraintlayout = "2.1.4"
+lifecycle = "2.6.1"
+coroutines = "1.5.2"
 jetpackLoading = "0.8.0"
 
 [libraries]
+androidxDatastorePreferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -36,6 +41,11 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 retrofitGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 iconsax = { group = "io.github.being-eyram", name = "iconsax-android", version.ref = "iconsax" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+lifecycleViewModelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycleLiveDataKtx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
+coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 jetpackLoading = { group = "com.ehsanmsz", name = "msz-progress-indicator", version.ref = "jetpackLoading"}
 
 [plugins]
