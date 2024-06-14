@@ -28,6 +28,7 @@ import com.ulascan.app.ui.screens.auth.register.RegisterViewModel
 import com.ulascan.app.ui.screens.chat.Chat
 import com.ulascan.app.ui.screens.chat.ChatScreen
 import com.ulascan.app.ui.screens.chat.ChatViewModel
+import com.ulascan.app.ui.screens.detailAnalysis.DetailAnalysisScreen
 import com.ulascan.app.ui.screens.initial.InitialScreen
 import com.ulascan.app.ui.theme.UlaScanTheme
 
@@ -82,6 +83,7 @@ class MainActivity : ComponentActivity() {
                 val registerViewModel = viewModel<RegisterViewModel>()
                 RegisterScreen(registerViewModel, navController)
             }
+
             composable(NavigationItem.Login.route) {
                 val loginViewModel: LoginViewModel =
                     viewModel(factory = LoginViewModelFactory(userRepository))
@@ -97,6 +99,9 @@ class MainActivity : ComponentActivity() {
                     ),
                     onSendChatClickListener = { message -> chatViewModel.sendMessage(message) }
                 )
+            }
+            composable(NavigationItem.DetailAnalysis.route) {
+                DetailAnalysisScreen(navController)
             }
         }
     }
