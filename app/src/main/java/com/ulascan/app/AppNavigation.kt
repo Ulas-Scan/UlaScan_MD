@@ -5,7 +5,7 @@ enum class Screen {
     REGISTER,
     LOGIN,
     INITIAL,
-    DETAIL_ANALYSIS,
+    DETAIL_ANALYSIS
 }
 
 sealed class NavigationItem(val route: String) {
@@ -13,5 +13,6 @@ sealed class NavigationItem(val route: String) {
     object DetailAnalysis: NavigationItem(Screen.DETAIL_ANALYSIS.name)
     object Register : NavigationItem(Screen.REGISTER.name)
     object Login : NavigationItem(Screen.LOGIN.name)
+
     object Initial : NavigationItem(Screen.INITIAL.name)
 }

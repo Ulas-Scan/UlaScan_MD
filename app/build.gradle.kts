@@ -75,7 +75,10 @@ dependencies {
     implementation(libs.lifecycleLiveDataKtx)
     implementation(libs.coroutinesCore)
     implementation(libs.coroutinesAndroid)
-
+    implementation(libs.compose.ui)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
