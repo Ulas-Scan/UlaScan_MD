@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,7 +53,7 @@ fun InitialScreen(navController: NavController = rememberNavController()) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.iphone_cut_hdpi),
-                    contentDescription = "Ulascan Logo",
+                    contentDescription = stringResource(id = R.string.app_name),
                     modifier = Modifier
                         .size(400.dp)
                 )
@@ -75,7 +76,7 @@ fun InitialScreen(navController: NavController = rememberNavController()) {
 
                 ) {
 
-                Text(text = "Temukan\nProduk Terbaikmu !",
+                Text(text = stringResource(id = R.string.find_your_best_product),
                     style = MaterialTheme.typography.titleLarge.copy(
                         textAlign = TextAlign.Start,
                     )
@@ -83,7 +84,7 @@ fun InitialScreen(navController: NavController = rememberNavController()) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent at malesuada arcu, a euismod ipsum. Maecenas pretium elit a accumsan feugiat.",
+                Text(text = stringResource(id = R.string.initial_description),
                     style = MaterialTheme.typography.labelMedium.copy(
                         textAlign = TextAlign.Start,
                         color = Color.Gray)
@@ -99,7 +100,7 @@ fun InitialScreen(navController: NavController = rememberNavController()) {
                         .height(64.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Brand900),
                 ) {
-                    Text(text = "Mulai Sekarang")
+                    Text(text = stringResource(id = R.string.get_started))
                 }
             }
 

@@ -9,15 +9,37 @@
     <string name="sentiment_analysis">Sentiment Analysis</string>
     <string name="analysis_summary">Analysis Summary</string>
     <string name="login_text">Login to Your Account!</string>
-    <string name="login_guides">Enter your email and password to\n enter your account </string>
+    <string name="login_guides">Enter your email and password to\nenter your account </string>
     <string name="email">Email</string>
     <string name="email_guides">Enter your Email</string>
     <string name="password">Password</string>
     <string name="password_guides">Enter your Password</string>
+    <string name="name">Name</string>
+    <string name="name_guides">Enter your Full Name</string>
     <string name="enter">Enter</string>
     <string name="sign_in_message">Don\'t have an account yet?&#160;</string>
+    <string name="sign_up_message">Already have an account?&#160;</string>
     <string name="register_hint">Register</string>
-
+    <string name="register_text">Register Now!</string>
+    <string name="register_guides"> Enter your data to register\non this application! </string>
+    <string name="find_your_best_product"> Find\nYour Best Product! </string>
+    <string name="initial_description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent at malesuada arcu, a euismod ipsum. Maecenas pretium elit a accumsan feugiat. </string>
+    <string name="get_started"> Get Started </string>
+    <string name="positive_review_key">Positive Review</string>
+    <string name="negative_review_key">Negative Review</string>
+    <string name="product_condition">Product Condition</string>
+    <string name="negative_key">Negative</string>
+    <string name="positive_key">Positive</string>
+    <string name="packaging_satisfaction">%1$s%% of buyers are satisfied regarding packaging safety.</string>
+    <string name="delivery_satisfaction">%1$s%% of buyers feel that delivery of this item is very fast.</string>
+    <string name="admin_response">%1$s%% of buyers feel that the admin is fast respond and polite.</string>
+    <string name="product_condition_message">%1$s%% say that the item is not defective at all and functions well.</string>
+    <string name="rating">Rating</string>
+    <string name="star">Stars</string>
+    <string name="review">Review</string>
+    <string name="packaging">Packaging</string>
+    <string name="delivery">Delivery</string>
+    <string name="admin_response_text">Admin Response</string>
 
     <string-array name="guides">
         <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>

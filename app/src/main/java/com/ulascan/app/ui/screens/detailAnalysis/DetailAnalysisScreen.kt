@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -81,7 +82,10 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController(),
             items(1) {
                 Column(modifier = Modifier.padding(horizontal = 16.dp)) {
 
-                    PieChart(data = mapOf("Review Positif" to data.countPositive, "Review Negatif" to data.countNegative))
+                    PieChart(data = mapOf(stringResource(R.string.positive_review_key) to data.countPositive,
+                        stringResource(
+                            R.string.negative_review_key
+                        ) to data.countNegative))
 
                     Box(
                         modifier = Modifier
@@ -90,7 +94,7 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController(),
                             .background(Color.White)
                     ) {
                         Text(
-                            text = "${(data.countPositive.toDouble()/(data.countPositive + data.countNegative))*100}% of buyers are satisfied \nwith purchasing the product overall",
+                            text = "${((data.countPositive.toDouble()/(data.countPositive + data.countNegative))*100).toInt()}% of buyers are satisfied \nwith purchasing the product overall",
                             color = Brand900,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
@@ -116,7 +120,7 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController(),
                             .padding(16.dp),
                     ) {
                         Text(
-                            text = "Ringkasan Analisis",
+                            text = stringResource(R.string.analysis_summary),
                             color = Neutral900,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
@@ -150,7 +154,7 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController(),
                             .padding(16.dp),
                     ) {
                         Text(
-                            text = "Ringkasan Analisis",
+                            text = stringResource(R.string.product_condition),
                             color = Neutral900,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
@@ -169,10 +173,13 @@ fun DetailAnalysisScreen(navController: NavController = rememberNavController(),
                             horizontalArrangement = Arrangement.spacedBy(20.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            NormalPieChart(data = mapOf("Sample-1" to (100-data.productCondition.toInt()), "Sample-2" to data.productCondition.toInt()))
+                            NormalPieChart(data = mapOf(stringResource(R.string.negative_key) to (100-data.productCondition.toInt()),
+                                stringResource(
+                                    R.string.positive_key
+                                ) to data.productCondition.toInt()))
 
                             Text(
-                                text = "${data.productCondition.toInt()}% say that the item is not defective at all and functions well.",
+                                text = stringResource(id = R.string.product_condition_message, data.productCondition.toInt()),
                                 color = Neutral900,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
@@ -206,7 +213,7 @@ fun HeaderRow(navController: NavController, title: String, backgroundColor: Colo
     ) {
         Image(
             painter = painterResource(id = imageResource),
-            contentDescription = "back",
+            contentDescription = stringResource(id = R.string.app_name),
             modifier = Modifier
                 .size(46.dp)
                 .clickable { navController.popBackStack() }
@@ -219,13 +226,6 @@ fun HeaderRow(navController: NavController, title: String, backgroundColor: Colo
                 fontWeight = FontWeight.SemiBold,
                 color = if (backgroundColor == Color.White) Brand900 else Color.White,
                 textAlign = TextAlign.Center
-        )
-
-        Text(
-            text = "test",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.Transparent,
         )
     }
 }
@@ -251,7 +251,7 @@ fun ProductStats(
             ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_person),
-                contentDescription = "back",
+                contentDescription = stringResource(id = R.string.app_name),
                 modifier = Modifier.size(46.dp)
             )
             Text(
@@ -264,7 +264,7 @@ fun ProductStats(
                     .fillMaxWidth()
             )
             Text(
-                text = "Rating",
+                text = stringResource(id = R.string.rating),
                 color = Neutral900,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
@@ -286,7 +286,7 @@ fun ProductStats(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_star),
-                contentDescription = "star",
+                contentDescription = stringResource(R.string.star),
                 modifier = Modifier.size(46.dp)
             )
             Text(
@@ -299,7 +299,7 @@ fun ProductStats(
                     .fillMaxWidth()
             )
             Text(
-                text = "Bintang",
+                text = stringResource(R.string.star),
                 color = Neutral900,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
@@ -320,7 +320,7 @@ fun ProductStats(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_pen),
-                contentDescription = "pen",
+                contentDescription = stringResource(id = R.string.rating),
                 modifier = Modifier.size(46.dp)
             )
             Text(
@@ -333,7 +333,7 @@ fun ProductStats(
                     .fillMaxWidth()
             )
             Text(
-                text = "Ulasan",
+                text = stringResource(R.string.review),
                 color = Neutral900,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
@@ -357,13 +357,13 @@ fun SentimentAnalysis(packaging: Int, delivery: Int, adminResponse: Int) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         SentimentItems(
-        percentage = packaging, title = "Packaging", content = "$packaging% pembeli puas dengan pekejing"
+        percentage = packaging, title = stringResource(R.string.packaging), content = stringResource(id = R.string.packaging_satisfaction, packaging)
         )
         SentimentItems(
-            percentage = delivery, title = "fungsi", content = "$delivery% pembeli puas dengan fungsi barang"
+            percentage = delivery, title = stringResource(R.string.delivery), content = stringResource(id = R.string.delivery_satisfaction, delivery)
         )
         SentimentItems(
-            percentage = adminResponse, title = "gatau", content = "$adminResponse% pembeli gatau ini barang apa"
+            percentage = adminResponse, title = stringResource(R.string.admin_response_text), content = stringResource(id = R.string.admin_response, adminResponse)
         )
     }
 }

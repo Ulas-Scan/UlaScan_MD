@@ -37,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -70,8 +71,8 @@ fun RegisterScreen(
             name = ""
             email = ""
             password = ""
-            navController.navigate("login") {
-                popUpTo("register") { inclusive = true }
+            navController.navigate(NavigationItem.Login.route) {
+                popUpTo(NavigationItem.Register.route) { inclusive = true }
             }
         }
     }
@@ -95,20 +96,20 @@ fun RegisterScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_ulascan),
-                contentDescription = "Ulascan Logo",
+                contentDescription = stringResource(id = R.string.app_name),
                 modifier = Modifier.size(120.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Daftarkan Dirimu !",
+                text = stringResource(id = R.string.register_text),
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = Color.White,
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Masukkan datamu untuk mendaftar\n pada aplikasi ini!",
+                text = stringResource(id = R.string.register_guides),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = Color.White,
                     textAlign = TextAlign.Center
@@ -130,25 +131,25 @@ fun RegisterScreen(
                 ) {
 
                     FormInput(
-                        title = "Nama Lengkap",
+                        title = stringResource(id = R.string.name),
                         value = name,
                         onValueChange = { name = it },
-                        label = "Masukkan Nama Lengkap Anda",
+                        label = stringResource(id = R.string.name_guides),
                     )
 
                     FormInput(
-                        title = "Email",
+                        title = stringResource(id = R.string.email),
                         value = email,
                         onValueChange = { email = it },
-                        label = "Masukkan Email Anda",
+                        label = stringResource(id = R.string.email_guides),
                     )
 
 
                     FormInput(
-                        title = "Kata Sandi",
+                        title = stringResource(id = R.string.password),
                         value = password,
                         onValueChange = { password = it },
-                        label = "Masukkan Kata Sandi Anda",
+                        label = stringResource(id = R.string.password_guides),
                         isPassword = true
                     )
 
@@ -165,15 +166,15 @@ fun RegisterScreen(
                             .height(48.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Brand900),
                     ) {
-                        Text(text = "Daftar")
+                        Text(text = stringResource(id = R.string.register_hint))
                     }
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Sudah Memiliki akun ? ")
-                        Text(text = "Masuk", fontWeight = FontWeight.Bold,
+                        Text(text = stringResource(id = R.string.sign_up_message))
+                        Text(text = stringResource(id = R.string.enter), fontWeight = FontWeight.Bold,
                             modifier = Modifier.clickable { navController.navigate(NavigationItem.Login.route)})
                     }
                 }
