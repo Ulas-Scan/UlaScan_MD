@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -49,16 +51,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.ehsanmsz.mszprogressindicator.progressindicator.BallPulseProgressIndicator
+import com.ehsanmsz.mszprogressindicator.progressindicator.BallScaleRippleMultipleProgressIndicator
 import com.ulascan.app.R
+import com.ulascan.app.data.remote.response.AnalysisData
+import com.ulascan.app.data.remote.response.Chat
+import com.ulascan.app.data.remote.response.ResultState
 import com.ulascan.app.ui.components.AppTitle
-import com.ulascan.app.ui.screens.chat.Chat
 import com.ulascan.app.ui.screens.chat.history.DrawerState
 import com.ulascan.app.ui.screens.chat.history.opposite
+import com.ulascan.app.ui.theme.Brand600
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.Error600
 import com.ulascan.app.ui.theme.Keyboard
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.utils.isUrl
+import com.ulascan.app.utils.toCapitalize
 import io.eyram.iconsax.IconSax
 
 @Composable
@@ -133,7 +141,7 @@ fun ChatPreview(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ChatMessages(messages: List<Chat.Message>, modifier: Modifier = Modifier) {
+fun ChatMessages(uiState: ResultState<Nothing>, messages: List<Chat.Message>, modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
             .padding(32.dp),
@@ -144,9 +152,45 @@ fun ChatMessages(messages: List<Chat.Message>, modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if(messages[index].isResponse) {
-                    ResponseMessage()
+                    ResponseMessage(messages[index].response as AnalysisData)
                 } else {
                     UserMessage(messages[index].text)
+                }
+            }
+        }
+
+        if (uiState is ResultState.Loading) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    BallPulseProgressIndicator(
+                        color = Brand900,
+                        animationDuration = 800,
+                        animationDelay = 200,
+                        startDelay = 0,
+                        ballCount = 4
+                    )
+                }
+            }
+        } else if (uiState is ResultState.Error) {
+            // Temporary error state
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = uiState.error.toCapitalize(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Error600,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             }
         }
@@ -154,10 +198,11 @@ fun ChatMessages(messages: List<Chat.Message>, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ChatField(modifier: Modifier = Modifier, onSendChatClickListener: (Chat.Message) -> Unit) {
+fun ChatField(modifier: Modifier = Modifier, uiState: ResultState<Nothing>, onSendChatClickListener: (Chat.Message) -> Unit, onCancelChatClickListener: () -> Unit) {
     var link by remember { mutableStateOf(TextFieldValue()) }
     var isValidLink by remember { mutableStateOf(true) }
-    
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -193,7 +238,14 @@ fun ChatField(modifier: Modifier = Modifier, onSendChatClickListener: (Chat.Mess
                     imeAction = ImeAction.Done
                 ),
                 modifier = modifier
-                    .padding(horizontal = 12.dp, vertical = 2.dp),
+                    .border(
+                        width = 3.dp,
+                        color = if (isValidLink) Color.Transparent else Error600,
+                        shape = RoundedCornerShape(35.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 2.dp)
+                    .widthIn(min = 0.dp, max = 250.dp)
+                    ,
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.Transparent,
                     focusedBorderColor = Color.Transparent,
@@ -207,28 +259,47 @@ fun ChatField(modifier: Modifier = Modifier, onSendChatClickListener: (Chat.Mess
         Box {
             Button(
                 onClick = {
-                    onSendChatClickListener(
-                        Chat.Message(
-                            isResponse = false,
-                            text = link.text,
+                    if (uiState is ResultState.Loading) {
+                        onCancelChatClickListener()
+                    } else {
+                        onSendChatClickListener(
+                            Chat.Message(
+                                isResponse = false,
+                                text = link.text,
+                            )
                         )
-                    )
+                        link = TextFieldValue()
+                        keyboardController?.hide()
+                    }
                 },
-                enabled = isValidLink && link.text.isNotEmpty(),
+                enabled = (isValidLink && link.text.isNotEmpty()) || uiState is ResultState.Loading,
                 modifier = Modifier
                     .size(56.dp)
                     .clip(CircleShape),
                 shape = CircleShape,
                 contentPadding = PaddingValues(1.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isValidLink && link.text.isNotEmpty()) Brand900 else Color.Gray,
+                    containerColor = when {
+                        uiState is ResultState.Loading -> Error600
+                        isValidLink && link.text.isNotEmpty() -> Brand900
+                        else -> Color.Gray
+                    }
                 )
             ) {
-                Icon(
-                    painter = painterResource(IconSax.Bold.Send1),
-                    contentDescription = "Send",
-                    modifier = Modifier.size(24.dp)
-                )
+                if(uiState is ResultState.Loading) {
+                    Icon(
+                        painter = painterResource(IconSax.Bold.Pause),
+                        contentDescription = "Cancel",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.White
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(IconSax.Bold.Send1),
+                        contentDescription = "Send",
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }
@@ -239,8 +310,10 @@ fun ChatContent(
     modifier: Modifier = Modifier,
     drawerState: DrawerState,
     onDrawerClick: (DrawerState) -> Unit,
+    uiState: ResultState<Nothing>,
     chat: Chat,
-    onSendChatClickListener: (Chat.Message) -> Unit
+    onSendChatClickListener: (Chat.Message) -> Unit,
+    onCancelChatClickListener: () -> Unit
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -271,6 +344,7 @@ fun ChatContent(
             )
         } else {
             ChatMessages(
+                uiState = uiState,
                 messages = chat.messages,
                 modifier = Modifier.constrainAs(content) {
                     top.linkTo(header.bottom)
@@ -287,7 +361,9 @@ fun ChatContent(
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             },
-            onSendChatClickListener = onSendChatClickListener
+            uiState = uiState,
+            onSendChatClickListener = onSendChatClickListener,
+            onCancelChatClickListener = onCancelChatClickListener
         )
     }
 }
@@ -301,11 +377,12 @@ fun ChatContentPreview() {
             onDrawerClick = {},
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background),
+            uiState = ResultState.Default,
             chat = Chat(
                 messages = emptyList(),
-                chatId = "chat-ebs123",
             ),
-            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }
+            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
+            onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") }
         )
     }
 }
@@ -313,16 +390,54 @@ fun ChatContentPreview() {
 @Composable
 @Preview(showBackground = true)
 fun ChatContentWithMessagePreview() {
-    val num = 40  // Number of items to create
-    val messages = mutableListOf<Chat.Message>()
-
-    for (i in 1..num) {
-        val message = Chat.Message(
-            isResponse = i%2 == 0,
-            text = "https://www.tokopedia.com/iceler/cafelercoffeemaker-2-boiler-sistem-mesin-kopi-espresso-grinder-58mm-beige-00829?extParam=ivf%3Dtrue&src=topads $i"
-        )
-        messages.add(message)
-    }
+    val instance =
+        AnalysisData(
+            productName = "Tropicana Slim Cafe Latte (10 sch) - Kopi Bebas Gula",
+            productDescription = "Tropicana Slim Cafe Latte adalah paduan kopi susu yang sempurna dengan rasa manis yang bisa dinikmati tanpa rasa khawatir karena diformulasikan tanpa penambahan gula pasir sehingga aman untuk diabetesi dan cocok untuk diet. \\nSemangati harimu dengan secangkir Tropicana Slim Cafe Latte!\\n\\nMengapa Tropicana Slim Cafe Latte?\\n- Rasa kopi susu yang nikmat\\n- Tanpa penambahan gula pasir \\n- Aman untuk diabetesi dan cocok untuk diet\\n- Lebih rendah kafein, aman untuk ibu hamil dan menyusui.\\n\\nCara Penyajian dan Petunjuk Konsumsi :\\nLarutkan 1 sachet Tropicana Slim Cafe Latte dalam 200 ml air hangat.  Aduk merata, dan secangkir kopi hangat yang nikmat lezat pun siap Anda nikmati.\\n\\nNutrimart merekomendasikan Tropicana Slim Cafe Latte untuk kamu yang:\\n - Mencari KOPI NIKMAT ala CAFE, TANPA GULA PASIR\\n - Memulai POLA HIDUP SEHAT dengan membatasi asupan gula\\n - MenJAGA KADAR GULA DARAH\\n - Memiliki DIABETES\\n - Menjalankan DIET\\n - Mementingkan KREDIBILITAS produk dengan pengalaman hampir 50 TAHUN",
+            rating = 100,
+            ulasan = 93,
+            bintang = 4.91,
+            imageUrls =
+            listOf(
+                "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/7/26/e799c724-ed29-43dc-b723-2854421553f3.jpg",
+                "https://images.tokopedia.net/img/cache/700/VqbcmM/2022/6/24/aef9ea0c-0e01-45f3-bc0f-8bc5b03dc581.jpg",
+                "https://images.tokopedia.net/img/cache/700/VqbcmM/2022/6/24/26e86f2d-373b-46cb-bda9-1ab4bd427907.jpg",
+                "https://images.tokopedia.net/img/cache/700/VqbcmM/2022/6/24/002e056c-cd07-4fbc-aefe-1f9a1d9ea739.jpg",
+                "https://images.tokopedia.net/img/cache/700/VqbcmM/2022/6/24/07280c5d-b3de-4818-87be-440355233f6c.jpg"),
+            shopName = "NutriMart",
+            countNegative = 48,
+            countPositive = 45,
+            packaging = 84.62,
+            delivery = 90,
+            adminResponse = 100,
+            productCondition = 92.59,
+            summary =
+            "Secara keseluruhan, produk Tropicana Slim Cafe Latte mendapatkan ulasan yang positif. Pengguna menyukai rasanya yang enak, meskipun beberapa menganggapnya terlalu manis. Pengiriman cepat dan pengemasan aman diapresiasi oleh banyak pengguna. Produk ini juga dipuji karena rendah kalori dan bebas gula, menjadikannya pilihan yang lebih sehat. Beberapa pengguna menyebutkan bahwa mereka telah menjadi pelanggan tetap dan akan membeli lagi.")
+    
+    val messages = mutableListOf(
+        Chat.Message(
+            isResponse = false,
+            text = "Message number 1"
+        ),
+        Chat.Message(
+            isResponse = true,
+            response = instance,
+            text = "Message number 2"
+        ),
+        Chat.Message(
+            isResponse = false,
+            text = "Message number 3"
+        ),
+        Chat.Message(
+            isResponse = true,
+            response = instance,
+            text = "Message number 4"
+        ),
+        Chat.Message(
+            isResponse = false,
+            text = "Message number 5"
+        ),
+    )
     
     UlaScanTheme {
         ChatContent(
@@ -330,11 +445,12 @@ fun ChatContentWithMessagePreview() {
             onDrawerClick = {},
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background),
+            uiState = ResultState.Default,
             chat = Chat(
                 messages = messages,
-                chatId = "chat-ebs123",
             ),
-            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }
+            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
+            onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") }
         )
     }
 }

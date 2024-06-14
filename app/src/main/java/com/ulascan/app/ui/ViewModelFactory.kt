@@ -3,14 +3,15 @@ package com.ulascan.app.ui
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ulascan.app.ui.screens.initial.InitialViewModel
+import com.ulascan.app.di.Injection
+import com.ulascan.app.ui.screens.chat.ChatViewModel
 
 class ViewModelFactory private constructor(private val applicationContext: Context) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T = when (modelClass) {
-        InitialViewModel::class.java -> InitialViewModel() as T
+        ChatViewModel::class.java -> ChatViewModel(Injection.getChatRepository()) as T
         else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 

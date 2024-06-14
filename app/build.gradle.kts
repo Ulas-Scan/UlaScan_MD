@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.retrofitGson)
     implementation(libs.loggingInterceptor)
     implementation(libs.iconsax)
+    implementation(libs.jetpackLoading)
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -3,13 +3,11 @@ package com.ulascan.app.ui.screens.chat
 import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +19,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ulascan.app.data.remote.response.Chat
+import com.ulascan.app.data.remote.response.ResultState
 import com.ulascan.app.ui.screens.chat.components.ChatContent
 import com.ulascan.app.ui.screens.chat.history.Drawer
 import com.ulascan.app.ui.screens.chat.history.DrawerState
@@ -32,10 +31,8 @@ import com.ulascan.app.ui.theme.Weak100
 import kotlin.math.roundToInt
 
 @Composable
-fun ChatScreen(chat: Chat, onSendChatClickListener: (Chat.Message) -> Unit, modifier: Modifier = Modifier) {
+fun ChatScreen(uiState: ResultState<Nothing>, chat: Chat, onSendChatClickListener: (Chat.Message) -> Unit, onCancelChatClickListener: () -> Unit, modifier: Modifier = Modifier) {
     var drawerState by remember { mutableStateOf(DrawerState.Closed) }
-    
-    Log.d("ChatScreen", "ChatScreen: ${chat.messages}")
     
     var selectedHistoryItem by remember {
         mutableStateOf(
@@ -79,8 +76,10 @@ fun ChatScreen(chat: Chat, onSendChatClickListener: (Chat.Message) -> Unit, modi
         ChatContent(
             drawerState = drawerState,
             onDrawerClick = { drawerState = it },
+            uiState = uiState,
             chat = chat,
             onSendChatClickListener = onSendChatClickListener,
+            onCancelChatClickListener = onCancelChatClickListener,
             modifier = Modifier
                 .offset(x = animatedOffset)
         )
@@ -92,17 +91,16 @@ fun ChatScreen(chat: Chat, onSendChatClickListener: (Chat.Message) -> Unit, modi
 fun ChatScreenPreview() {
     UlaScanTheme {
         val chat = Chat(
-            chatId = "chat-ebs123",
             messages = emptyList()
         )
-        ChatScreen(chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") })
+        ChatScreen(uiState = ResultState.Default, chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") } )
     }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun ChatScreenWithMessagePreview() {
-    val num = 40  // Number of items to create
+    val num = 5  // Number of items to create
     val messages = mutableListOf<Chat.Message>()
 
     for (i in 1..num) {
@@ -115,9 +113,8 @@ fun ChatScreenWithMessagePreview() {
     
     UlaScanTheme {
         val chat = Chat(
-            chatId = "chat-ebs123",
             messages = messages
         )
-        ChatScreen(chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") })
+        ChatScreen(uiState = ResultState.Default, chat = chat, onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") })
     }
 }

@@ -6,6 +6,9 @@
     <string name="chat_placeholder"> Masukkan link produk disini </string>
     <string name="search">Masukkan kata kunci</string>
     <string name="username">Anda</string>
+    <string name="product_review">Ulasan Produk</string>
+    <string name="sentiment_analysis">Analisis Sentimen</string>
+    <string name="analysis_summary">Ringkasan Analisis</string>
 
     <string-array name="guides">
         <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>

@@ -5,43 +5,69 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ulascan.app.data.remote.response.AnalysisData
+import com.ulascan.app.data.remote.response.Chat
+import com.ulascan.app.data.remote.response.ResultState
+import com.ulascan.app.data.repository.ChatRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ChatViewModel: ViewModel() {
+class ChatViewModel(
+    private val chatRepository: ChatRepository
+): ViewModel() {
+    private val _uiState = MutableStateFlow<ResultState<Nothing>>(ResultState.Default)
     
-    // TODO: Use flow instead!
+    val uiState
+        get() = _uiState
+    
     private val _conversation = MutableStateFlow<List<Chat.Message>>(emptyList())
     val conversation: StateFlow<List<Chat.Message>>
         get() = _conversation
-    
-    private val responses = mutableListOf(
-        "The Martian rover discovered a new type of mineral that glows in the dark and emits a faint, pleasant aroma of vanilla.",
-        "A team of archaeologists recently uncovered a 5,000-year-old smartphone in the ruins of an ancient city, complete with a functioning battery.",
-        "Scientists have successfully taught a colony of ants to solve simple mathematical equations, marking a breakthrough in interspecies communication",
-        "A rare breed of bioluminescent birds has been spotted in the Amazon rainforest, their feathers glowing in a mesmerizing array of colors at night.",
-        "A new culinary trend is sweeping through Europe: edible holographic food, which projects stunning 3D images before being consumed."
-    )
-    
+
+    private var job: Job? = null
+
     fun sendMessage(chat: Chat.Message) {
-        viewModelScope.launch { 
+        job = viewModelScope.launch { 
+            _uiState.emit(ResultState.Loading)
             _conversation.emit(_conversation.value.plus(chat))
-            if (!chat.isResponse) {
-                val response = Chat.Message(responses.random(), true)
-                _conversation.emit(_conversation.value.plus(response))
+            withContext(Dispatchers.IO) {
+                chatRepository.getGuestAnalysis(chat.text).let { result ->
+                    when (result) {
+                        is ResultState.Error -> {
+                            val error = result.error
+                            val message = Chat.Message(
+                                isResponse = true,
+                                response = null,
+                                text = error
+                            )
+                            _conversation.emit(_conversation.value.plus(message))
+                        }
+
+                        is ResultState.Success -> {
+                            val response = result.data
+                            val message = Chat.Message(
+                                isResponse = true,
+                                response = response.data,
+                                text = response.message ?: "Success"
+                            )
+                            _conversation.emit(_conversation.value.plus(message))
+                        }
+
+                        else -> Unit
+                    }
+                }.also {
+                    _uiState.emit(ResultState.Default)
+                }   
             }
         }
     }
-}
-
-// TODO: Refactor this
-data class Chat(
-    val chatId: String,
-    val messages: List<Message>
-) {
-    data class Message (
-        val text: String,
-        val isResponse: Boolean,
-    )
+    
+    fun cancelRequest() {
+        job?.cancel()
+        _uiState.value = ResultState.Default
+    }
 }

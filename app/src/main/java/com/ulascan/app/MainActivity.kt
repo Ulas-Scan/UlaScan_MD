@@ -3,19 +3,20 @@ package com.ulascan.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ulascan.app.ui.screens.chat.Chat
+import com.ulascan.app.data.remote.response.Chat
+import com.ulascan.app.ui.ViewModelFactory
 import com.ulascan.app.ui.screens.chat.ChatScreen
 import com.ulascan.app.ui.screens.chat.ChatViewModel
 import com.ulascan.app.ui.theme.UlaScanTheme
@@ -48,15 +49,19 @@ fun AppNavHost(
         startDestination = startDestination,
     ) {
         composable(NavigationItem.Chat.route) {
-            val chatViewModel = viewModel<ChatViewModel>()
+            val chatViewModel = viewModel<ChatViewModel>(factory = ViewModelFactory.getInstance(
+                LocalContext.current))
+            
+            val uiState = chatViewModel.uiState.collectAsState()
             val conversation = chatViewModel.conversation.collectAsState()
             
             ChatScreen(
+                uiState = uiState.value,
                 chat = Chat(
                     messages = conversation.value,
-                    chatId = "chat-ebs123",
                 ),
-                onSendChatClickListener = { message -> chatViewModel.sendMessage(message) } 
+                onSendChatClickListener = { message -> chatViewModel.sendMessage(message) },
+                onCancelChatClickListener = { chatViewModel.cancelRequest() }
             )
         }
     }
