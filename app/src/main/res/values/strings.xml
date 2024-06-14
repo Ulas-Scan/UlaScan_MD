@@ -8,6 +8,16 @@
     <string name="product_review">Product Review</string>
     <string name="sentiment_analysis">Sentiment Analysis</string>
     <string name="analysis_summary">Analysis Summary</string>
+    <string name="login_text">Login to Your Account!</string>
+    <string name="login_guides">Enter your email and password to\n enter your account </string>
+    <string name="email">Email</string>
+    <string name="email_guides">Enter your Email</string>
+    <string name="password">Password</string>
+    <string name="password_guides">Enter your Password</string>
+    <string name="enter">Enter</string>
+    <string name="sign_in_message">Don\'t have an account yet?&#160;</string>
+    <string name="register_hint">Register</string>
+
 
     <string-array name="guides">
         <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>

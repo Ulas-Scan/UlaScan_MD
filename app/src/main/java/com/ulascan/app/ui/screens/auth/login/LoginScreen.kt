@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -88,21 +89,21 @@ fun LoginScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_ulascan),
-                contentDescription = "Ulascan Logo",
+                contentDescription = stringResource(id = R.string.app_name),
                 modifier = Modifier
                     .size(120.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Masuk Ke Akunmu!",
+                text = stringResource(id = R.string.login_text),
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = Color.White,
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Masukkan email dan kata sandi untuk\n masuk ke akunmu",
+                text = stringResource(id = R.string.login_guides),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = Color.White,
                     textAlign = TextAlign.Center
@@ -125,17 +126,17 @@ fun LoginScreen(
 
 
                     FormInput(
-                        title = "Email",
+                        title = stringResource(id = R.string.email),
                         value = email,
                         onValueChange = { email = it },
-                        label = "Masukkan Email Anda"
+                        label = stringResource(id = R.string.email_guides)
                     )
 
                     FormInput(
-                        title = "Kata Sandi",
+                        title = stringResource(id = R.string.password),
                         value = password,
                         onValueChange = { password = it },
-                        label = "Masukkan Kata Sandi Anda",
+                        label = stringResource(id = R.string.password_guides),
                         isPassword = true
                     )
 
@@ -149,7 +150,7 @@ fun LoginScreen(
                             .height(48.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Brand900),
                             ) {
-                        Text(text = "Masuk")
+                        Text(text = stringResource(id = R.string.enter))
                     }
 
                     Row(
@@ -157,8 +158,8 @@ fun LoginScreen(
 
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Belum Memiliki akun ? ")
-                        Text(text = "Daftar", fontWeight = FontWeight.Bold, modifier = Modifier.clickable { navController.navigate(NavigationItem.Register.route)})
+                        Text(text = stringResource(id = R.string.sign_in_message))
+                        Text(text = stringResource(id = R.string.register_hint), fontWeight = FontWeight.Bold, modifier = Modifier.clickable { navController.navigate(NavigationItem.Register.route)})
                     }
 
                 }
