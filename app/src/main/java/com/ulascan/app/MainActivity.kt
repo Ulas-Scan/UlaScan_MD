@@ -1,8 +1,12 @@
 package com.ulascan.app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -80,7 +84,21 @@ class MainActivity : ComponentActivity() {
             modifier = modifier,
             startDestination = startDestination,
         ) {
-            composable(NavigationItem.Initial.route) {
+            composable(
+                route = NavigationItem.Initial.route,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(700)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(700)
+                    )
+                }
+            ) {
                 InitialScreen(navController)
             }
             composable(NavigationItem.Register.route) {
@@ -93,7 +111,21 @@ class MainActivity : ComponentActivity() {
                     viewModel(factory = LoginViewModelFactory(userRepository))
                 LoginScreen(loginViewModel, navController)
             }
-            composable(NavigationItem.Chat.route) {
+            composable(
+                route = NavigationItem.Chat.route,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(700)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(700)
+                    )
+                }
+            ) {
                 val chatViewModel = viewModel<ChatViewModel>(factory = ViewModelFactory.getInstance(
                     LocalContext.current))
 
