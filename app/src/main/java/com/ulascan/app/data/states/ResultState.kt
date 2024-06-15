@@ -1,4 +1,4 @@
-package com.ulascan.app.data.remote.response
+package com.ulascan.app.data.states
 
 sealed class ResultState<out R> private constructor() {
     data class Success<out T>(val data: T) : ResultState<T>()

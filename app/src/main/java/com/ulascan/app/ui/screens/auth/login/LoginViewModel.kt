@@ -1,13 +1,10 @@
 package com.ulascan.app.ui.screens.auth.register
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ulascan.app.data.remote.UserPreferences
-import com.ulascan.app.data.remote.UserRepository
+import com.ulascan.app.data.repository.UserRepository
 import com.ulascan.app.data.remote.api.ApiConfig
-import com.ulascan.app.data.remote.api.LoginRequest
-import com.ulascan.app.data.remote.api.RegisterRequest
+import com.ulascan.app.data.remote.request.LoginRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -30,8 +27,6 @@ private val userRepository: UserRepository
                 if (response.status == true) {
                     _uiState.value = LoginUiState.Success
                     userRepository.saveToken(response.data?.token.toString())
-                    Log.d("LOGIN", response.toString())
-                    Log.d("LOGIN", response.data?.token.toString())
                 } else {
                     _uiState.value = LoginUiState.Error("Login failed")
                 }

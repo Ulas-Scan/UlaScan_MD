@@ -20,6 +20,7 @@
     <string name="enter">Masuk</string>
     <string name="sign_in_message">Belum Memiliki akun?&#160;</string>
     <string name="sign_up_message">Sudah Memiliki akun?&#160;</string>
+    <string name="login_hint"> Masuk </string>
     <string name="register_hint">Daftar</string>
     <string name="register_text">Daftarkan Dirimu!</string>
     <string name="register_guides">Masukkan datamu untuk mendaftar\npada aplikasi ini! </string>
@@ -41,7 +42,9 @@
     <string name="packaging">Kemasan</string>
     <string name="delivery">Pengiriman</string>
     <string name="admin_response_text">Respon Admin</string>
-
+    <string name="sign_in_or_create_an_account">Masuk atau buat akun</string>
+    <string name="auth_description"> Membuka fitur riwayat analisis. </string>
+    
     <string-array name="guides">
         <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>
         <item>Maecenas sed lectus a libero pellentesque fermentum. Sed vitae elit quis felis aliquet varius sed vel odio.</item>

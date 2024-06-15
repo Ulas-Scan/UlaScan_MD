@@ -52,15 +52,13 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.ehsanmsz.mszprogressindicator.progressindicator.BallPulseProgressIndicator
-import com.ehsanmsz.mszprogressindicator.progressindicator.BallScaleRippleMultipleProgressIndicator
 import com.ulascan.app.R
 import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.data.remote.response.Chat
-import com.ulascan.app.data.remote.response.ResultState
+import com.ulascan.app.data.states.ResultState
 import com.ulascan.app.ui.components.AppTitle
 import com.ulascan.app.ui.screens.chat.history.DrawerState
 import com.ulascan.app.ui.screens.chat.history.opposite
-import com.ulascan.app.ui.theme.Brand600
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.Error600
 import com.ulascan.app.ui.theme.Keyboard
@@ -143,8 +141,8 @@ fun ChatPreview(modifier: Modifier = Modifier) {
 
 @Composable
 fun ChatMessages(
-    uiState: ResultState<Nothing>, 
-    messages: List<Chat.Message>, 
+    uiState: ResultState<Nothing>,
+    messages: List<Chat.Message>,
     modifier: Modifier = Modifier,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit
 ) {
@@ -205,9 +203,9 @@ fun ChatMessages(
 
 @Composable
 fun ChatField(
-    modifier: Modifier = Modifier, 
-    uiState: ResultState<Nothing>, 
-    onSendChatClickListener: (Chat.Message) -> Unit, 
+    modifier: Modifier = Modifier,
+    uiState: ResultState<Nothing>,
+    onSendChatClickListener: (Chat.Message) -> Unit,
     onCancelChatClickListener: () -> Unit, 
 ) { 
     var link by remember { mutableStateOf(TextFieldValue()) }

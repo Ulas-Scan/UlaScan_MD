@@ -19,6 +19,7 @@
     <string name="enter">Enter</string>
     <string name="sign_in_message">Don\'t have an account yet?&#160;</string>
     <string name="sign_up_message">Already have an account?&#160;</string>
+    <string name="login_hint"> Login </string>
     <string name="register_hint">Register</string>
     <string name="register_text">Register Now!</string>
     <string name="register_guides"> Enter your data to register\non this application! </string>
@@ -40,6 +41,8 @@
     <string name="packaging">Packaging</string>
     <string name="delivery">Delivery</string>
     <string name="admin_response_text">Admin Response</string>
+    <string name="sign_in_or_create_an_account">Sign in or create an account</string>
+    <string name="auth_description"> Unlock history analysis feature. </string>
 
     <string-array name="guides">
         <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>

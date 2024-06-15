@@ -11,7 +11,8 @@ class ViewModelFactory private constructor(private val applicationContext: Conte
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T = when (modelClass) {
-        ChatViewModel::class.java -> ChatViewModel(Injection.getChatRepository()) as T
+        ChatViewModel::class.java -> ChatViewModel(Injection.getChatRepository(applicationContext)) as T
+        AuthViewModel::class.java -> AuthViewModel(Injection.getUserRepository(applicationContext)) as T
         else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 

@@ -3,7 +3,7 @@ package com.ulascan.app.ui.screens.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ulascan.app.data.remote.response.Chat
-import com.ulascan.app.data.remote.response.ResultState
+import com.ulascan.app.data.states.ResultState
 import com.ulascan.app.data.repository.ChatRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

@@ -13,6 +13,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -26,9 +27,10 @@ import androidx.navigation.toRoute
 import com.ulascan.app.data.remote.response.Chat
 import com.ulascan.app.ui.ViewModelFactory
 import com.ulascan.app.data.remote.UserPreferences
-import com.ulascan.app.data.remote.UserRepository
+import com.ulascan.app.data.repository.UserRepository
 import com.ulascan.app.data.remote.dataStore
 import com.ulascan.app.data.remote.response.AnalysisData
+import com.ulascan.app.ui.AuthViewModel
 import com.ulascan.app.ui.screens.auth.LoginViewModelFactory
 import com.ulascan.app.ui.screens.auth.login.LoginScreen
 import com.ulascan.app.ui.screens.auth.register.LoginViewModel
@@ -56,11 +58,11 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val startDestination = remember { mutableStateOf(NavigationItem.Initial.route) }
 
-                    LaunchedEffect(Unit) {
-                        val isLoggedIn = userRepository.isUserLoggedIn()
-                        startDestination.value =
-                            if (isLoggedIn) NavigationItem.Chat.route else NavigationItem.Initial.route
-                    }
+//                    LaunchedEffect(Unit) {
+//                        val isLoggedIn = userRepository.isUserLoggedIn()
+//                        startDestination.value =
+//                            if (isLoggedIn) NavigationItem.Chat.route else NavigationItem.Initial.route
+//                    }
 
                     AppNavHost(
                         navController = navController,
@@ -79,6 +81,10 @@ class MainActivity : ComponentActivity() {
         modifier: Modifier = Modifier,
         startDestination: String
     ) {
+        val authViewModel = viewModel<AuthViewModel>(factory = ViewModelFactory.getInstance(
+            LocalContext.current))
+        val user by authViewModel.user.collectAsState()
+        
         NavHost(
             navController = navController,
             modifier = modifier,
@@ -102,15 +108,32 @@ class MainActivity : ComponentActivity() {
                 InitialScreen(navController)
             }
             composable(NavigationItem.Register.route) {
-                val registerViewModel = viewModel<RegisterViewModel>()
-                RegisterScreen(registerViewModel, navController)
+                if (user.isLoggedIn) {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(NavigationItem.Chat.route) {
+                            popUpTo(NavigationItem.Register.route) { inclusive = true }
+                        }
+                    }
+                } else {
+                    val registerViewModel = viewModel<RegisterViewModel>()
+                    RegisterScreen(registerViewModel, navController)
+                }
             }
 
             composable(NavigationItem.Login.route) {
-                val loginViewModel: LoginViewModel =
-                    viewModel(factory = LoginViewModelFactory(userRepository))
-                LoginScreen(loginViewModel, navController)
+                if (user.isLoggedIn) {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(NavigationItem.Chat.route) {
+                            popUpTo(NavigationItem.Login.route) { inclusive = true }
+                        }
+                    }
+                } else {
+                    val loginViewModel: LoginViewModel =
+                        viewModel(factory = LoginViewModelFactory(userRepository))
+                    LoginScreen(loginViewModel, navController)
+                }
             }
+            
             composable(
                 route = NavigationItem.Chat.route,
                 enterTransition = {
@@ -137,11 +160,14 @@ class MainActivity : ComponentActivity() {
                     chat = Chat(
                         messages = conversation.value,
                     ),
+                    isLoggedIn = user.isLoggedIn,
                     onSendChatClickListener = { message -> chatViewModel.sendMessage(message) },
                     onCancelChatClickListener = { chatViewModel.cancelRequest() },
                     onAnalyzeRouteNavigation = { 
                         data: AnalysisData -> navController.navigate(data)
-                    } 
+                    },
+                    onLoginDrawerNavigation = { navController.navigate(NavigationItem.Login.route) },
+                    onRegisterDrawerNavigation = { navController.navigate(NavigationItem.Register.route) },
                 )
             }
             composable<AnalysisData> (

@@ -1,17 +1,16 @@
 package com.ulascan.app.ui.screens.auth.register
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ulascan.app.data.remote.UserPreferences
 import com.ulascan.app.data.remote.api.ApiConfig
-import com.ulascan.app.data.remote.api.RegisterRequest
+import com.ulascan.app.data.remote.request.RegisterRequest
+import com.ulascan.app.data.states.RegisterUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class RegisterViewModel() : ViewModel() {
+class RegisterViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow<RegisterUiState>(RegisterUiState.Empty)
     val uiState: StateFlow<RegisterUiState> = _uiState
@@ -25,7 +24,6 @@ class RegisterViewModel() : ViewModel() {
 
                 if (response.status == true) {
                     _uiState.value = RegisterUiState.Success
-                    Log.d("REGISTER", response.toString())
                 } else {
                     _uiState.value = RegisterUiState.Error("Registration failed")
                 }
@@ -36,11 +34,4 @@ class RegisterViewModel() : ViewModel() {
             }
         }
     }
-}
-
-sealed class RegisterUiState {
-    object Empty : RegisterUiState()
-    object Loading : RegisterUiState()
-    object Success : RegisterUiState()
-    data class Error(val message: String) : RegisterUiState()
 }

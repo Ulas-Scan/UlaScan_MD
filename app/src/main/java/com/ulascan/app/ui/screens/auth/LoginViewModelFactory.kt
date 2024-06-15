@@ -2,7 +2,7 @@ package com.ulascan.app.ui.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ulascan.app.data.remote.UserRepository
+import com.ulascan.app.data.repository.UserRepository
 import com.ulascan.app.ui.screens.auth.register.LoginViewModel
 
 class LoginViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory {
