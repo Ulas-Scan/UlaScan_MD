@@ -1,11 +1,9 @@
 package com.ulascan.app
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -25,13 +23,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.ulascan.app.data.remote.response.Chat
-import com.ulascan.app.ui.ViewModelFactory
+import com.ulascan.app.ui.factory.ChatViewModelFactory
 import com.ulascan.app.data.remote.UserPreferences
 import com.ulascan.app.data.repository.UserRepository
 import com.ulascan.app.data.remote.dataStore
 import com.ulascan.app.data.remote.response.AnalysisData
-import com.ulascan.app.ui.AuthViewModel
-import com.ulascan.app.ui.screens.auth.LoginViewModelFactory
+import com.ulascan.app.ui.screens.auth.AuthViewModel
+import com.ulascan.app.ui.factory.AuthenticationViewModelFactory
 import com.ulascan.app.ui.screens.auth.login.LoginScreen
 import com.ulascan.app.ui.screens.auth.register.LoginViewModel
 import com.ulascan.app.ui.screens.auth.register.RegisterScreen
@@ -81,8 +79,9 @@ class MainActivity : ComponentActivity() {
         modifier: Modifier = Modifier,
         startDestination: String
     ) {
-        val authViewModel = viewModel<AuthViewModel>(factory = ViewModelFactory.getInstance(
-            LocalContext.current))
+        val authViewModel = viewModel<AuthViewModel>(
+            factory = AuthenticationViewModelFactory(userRepository)
+        )
         val user by authViewModel.user.collectAsState()
         
         NavHost(
@@ -129,7 +128,7 @@ class MainActivity : ComponentActivity() {
                     }
                 } else {
                     val loginViewModel: LoginViewModel =
-                        viewModel(factory = LoginViewModelFactory(userRepository))
+                        viewModel(factory = AuthenticationViewModelFactory(userRepository))
                     LoginScreen(loginViewModel, navController)
                 }
             }
@@ -149,8 +148,13 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             ) {
-                val chatViewModel = viewModel<ChatViewModel>(factory = ViewModelFactory.getInstance(
-                    LocalContext.current))
+                val isLoggedIn = user.isLoggedIn
+                val chatViewModel = viewModel<ChatViewModel>(factory = 
+                    ChatViewModelFactory.getInstance(
+                        LocalContext.current, 
+                        isLoggedIn = isLoggedIn
+                    )
+                )
 
                 val uiState = chatViewModel.uiState.collectAsState()
                 val conversation = chatViewModel.conversation.collectAsState()

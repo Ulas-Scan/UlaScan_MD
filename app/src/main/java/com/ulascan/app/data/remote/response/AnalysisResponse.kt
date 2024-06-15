@@ -12,6 +12,7 @@ data class Chat(
         val text: String,
         val response: AnalysisData? = null,
         val isResponse: Boolean,
+        val isError: Boolean = false
     )
 }
 

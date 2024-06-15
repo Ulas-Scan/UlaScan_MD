@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class ErrorResponse(
 
     @field:SerializedName("data")
-    val data: Data? = null,
+    val data: Any? = null,
 
     @field:SerializedName("message")
     val message: String? = null,
@@ -15,8 +15,4 @@ data class ErrorResponse(
 
     @field:SerializedName("status")
     val status: Boolean? = null
-)
-
-data class Data(
-    val any: Any? = null
 )

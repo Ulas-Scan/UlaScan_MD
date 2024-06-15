@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ChatViewModel(
+abstract class ChatViewModel(
     private val chatRepository: ChatRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow<ResultState<Nothing>>(ResultState.Default)
@@ -31,13 +31,14 @@ class ChatViewModel(
             _uiState.emit(ResultState.Loading)
             _conversation.emit(_conversation.value.plus(chat))
             withContext(Dispatchers.IO) {
-                chatRepository.getGuestAnalysis(chat.text).let { result ->
+                chatRepository.getAnalysis(chat.text).let { result ->
                     when (result) {
                         is ResultState.Error -> {
                             val error = result.error
                             val message = Chat.Message(
                                 isResponse = true,
                                 response = null,
+                                isError = true,
                                 text = error
                             )
                             _conversation.emit(_conversation.value.plus(message))
@@ -48,7 +49,7 @@ class ChatViewModel(
                             val message = Chat.Message(
                                 isResponse = true,
                                 response = response.data,
-                                text = response.message ?: "Success"
+                                text = response.message
                             )
                             _conversation.emit(_conversation.value.plus(message))
                         }
@@ -61,9 +62,20 @@ class ChatViewModel(
             }
         }
     }
-    
     fun cancelRequest() {
         job?.cancel()
         _uiState.value = ResultState.Default
     }
+}
+
+class GuestChatViewModel(
+    chatRepository: ChatRepository
+): ChatViewModel(chatRepository) {
+
+}
+
+class AuthenticatedChatViewModel(
+    chatRepository: ChatRepository
+): ChatViewModel(chatRepository) {
+
 }

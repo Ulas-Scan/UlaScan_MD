@@ -1,4 +1,4 @@
-package com.ulascan.app.ui
+package com.ulascan.app.ui.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -156,7 +156,26 @@ fun ChatMessages(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if(messages[index].isResponse) {
-                    ResponseMessage(data = messages[index].response as AnalysisData, onAnalyzeRouteNavigation = onAnalyzeRouteNavigation)
+                    if (messages[index].isError) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = messages[index].text.toCapitalize(),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Error600,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                    } else {
+                        ResponseMessage(
+                            data = messages[index].response as AnalysisData,
+                            onAnalyzeRouteNavigation = onAnalyzeRouteNavigation
+                        )
+                    }
                 } else {
                     UserMessage(messages[index].text)
                 }
@@ -177,23 +196,6 @@ fun ChatMessages(
                         animationDelay = 200,
                         startDelay = 0,
                         ballCount = 4
-                    )
-                }
-            }
-        } else if (uiState is ResultState.Error) {
-            // Temporary error state
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = uiState.error.toCapitalize(),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Error600,
-                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
