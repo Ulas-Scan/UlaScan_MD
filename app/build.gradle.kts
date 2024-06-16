@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.compose.runtime)
     implementation(libs.compose.material3)
     implementation(libs.kotlinSerialization)
+    implementation(libs.coilCompose)
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
