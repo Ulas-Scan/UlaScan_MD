@@ -1,8 +1,8 @@
-package com.ulascan.app.data.repository
+package com.ulascan.app.data.repository.chat
 
-import android.util.Log
 import com.ulascan.app.data.remote.api.ApiService
 import com.ulascan.app.data.remote.response.AnalysisResponse
+import com.ulascan.app.data.repository.ChatRepository
 import com.ulascan.app.data.states.ResultState
 import com.ulascan.app.utils.getErrorMessage
 import retrofit2.HttpException

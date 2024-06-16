@@ -67,15 +67,3 @@ abstract class ChatViewModel(
         _uiState.value = ResultState.Default
     }
 }
-
-class GuestChatViewModel(
-    chatRepository: ChatRepository
-): ChatViewModel(chatRepository) {
-
-}
-
-class AuthenticatedChatViewModel(
-    chatRepository: ChatRepository
-): ChatViewModel(chatRepository) {
-
-}

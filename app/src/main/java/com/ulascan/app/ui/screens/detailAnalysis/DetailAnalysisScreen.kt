@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -225,7 +226,9 @@ fun HeaderRow(navController: NavController, title: String, backgroundColor: Colo
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = if (backgroundColor == Color.White) Brand900 else Color.White,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -290,7 +293,7 @@ fun ProductStats(
                 modifier = Modifier.size(46.dp)
             )
             Text(
-                text = "$stars/5.0",
+                text = "${String.format("%.1f", stars).toDouble()}/5.0",
                 color = Neutral900,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,

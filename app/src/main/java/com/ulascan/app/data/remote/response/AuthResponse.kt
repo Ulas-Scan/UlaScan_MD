@@ -49,3 +49,29 @@ data class RegisterData(
     val email: String? = null
 )
 
+data class UserResponse(
+
+    @field:SerializedName("data")
+    val data: UserData,
+
+    @field:SerializedName("message")
+    val message: String,
+
+    @field:SerializedName("status")
+    val status: Boolean
+)
+
+data class UserData(
+
+    @field:SerializedName("role")
+    val role: String,
+
+    @field:SerializedName("name")
+    val name: String,
+
+    @field:SerializedName("id")
+    val id: String,
+
+    @field:SerializedName("email")
+    val email: String
+)

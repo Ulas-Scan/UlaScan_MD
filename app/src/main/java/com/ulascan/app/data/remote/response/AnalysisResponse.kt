@@ -46,16 +46,10 @@ data class AnalysisData(
     
     @field:SerializedName("rating")
     val rating: Int,
-
-    @field:SerializedName("image_urls")
-    val imageUrls: List<String>,
-
+    
     @field:SerializedName("packaging")
     val packaging: Double,
-
-    @field:SerializedName("shop_name")
-    val shopName: String,
-
+    
     @field:SerializedName("product_name")
     val productName: String,
 
@@ -65,12 +59,18 @@ data class AnalysisData(
     @field:SerializedName("count_negative")
     val countNegative: Int,
 
-    @field:SerializedName("product_description")
-    val productDescription: String,
-
     @field:SerializedName("bintang")
     val bintang: Double,
 
     @field:SerializedName("product_condition")
     val productCondition: Double,
+    
+    @field:SerializedName("product_description")
+    val productDescription: String,
+    
+    @field:SerializedName("image_urls")
+    val imageUrls: List<String>,
+
+    @field:SerializedName("shop_name")
+    val shopName: String,
 ) : Parcelable

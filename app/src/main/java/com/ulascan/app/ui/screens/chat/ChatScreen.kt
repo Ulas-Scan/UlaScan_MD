@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.data.remote.response.Chat
+import com.ulascan.app.data.remote.response.HistoriesItem
+import com.ulascan.app.data.remote.response.UserResponse
 import com.ulascan.app.data.states.ResultState
 import com.ulascan.app.ui.screens.chat.components.ChatContent
 import com.ulascan.app.ui.screens.chat.history.Drawer
@@ -32,9 +34,13 @@ import kotlin.math.roundToInt
 
 @Composable
 fun ChatScreen(
+    authState: ResultState<UserResponse>,
     uiState: ResultState<Nothing>,
+    historyState: ResultState<Nothing>,
     chat: Chat,
+    history: List<HistoriesItem>,
     isLoggedIn: Boolean = false,
+    onFetchHistory: () -> Unit,
     onSendChatClickListener: (Chat.Message) -> Unit,
     onCancelChatClickListener: () -> Unit,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit,
@@ -63,7 +69,11 @@ fun ChatScreen(
     ) {
         if (drawerState.isOpened()) {
             Drawer(
+                authState = authState,
+                historyState = historyState,
+                history = history,
                 isLoggedIn = isLoggedIn,
+                onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
                 onLoginDrawerNavigation = onLoginDrawerNavigation,
                 onRegisterDrawerNavigation = onRegisterDrawerNavigation,
                 modifier = Modifier
@@ -75,6 +85,7 @@ fun ChatScreen(
             onDrawerClick = { drawerState = it },
             uiState = uiState,
             chat = chat,
+            onFetchHistory = onFetchHistory,
             onSendChatClickListener = onSendChatClickListener,
             onCancelChatClickListener = onCancelChatClickListener,
             onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
@@ -92,8 +103,12 @@ fun ChatScreenPreview() {
             messages = emptyList()
         )
         ChatScreen(
-            uiState = ResultState.Default, 
-            chat = chat, 
+            authState = ResultState.Default,
+            uiState = ResultState.Default,
+            historyState = ResultState.Default,
+            chat = chat,
+            history = emptyList(),
+            onFetchHistory = { Log.d("ChatScreen", "Fetch history") }, 
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, 
             onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },  
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
@@ -122,8 +137,12 @@ fun ChatScreenWithMessagePreview() {
             messages = messages
         )
         ChatScreen(
-            uiState = ResultState.Default, 
-            chat = chat, 
+            authState = ResultState.Default,
+            uiState = ResultState.Default,
+            historyState = ResultState.Default,
+            chat = chat,
+            history = emptyList(),
+            onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, 
             onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },  
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },

@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -144,8 +145,15 @@ fun ChatMessages(
     uiState: ResultState<Nothing>,
     messages: List<Chat.Message>,
     modifier: Modifier = Modifier,
+    onFetchHistory: () -> Unit,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit
 ) {
+    LaunchedEffect(messages) {
+        if (messages.isNotEmpty()) {
+            onFetchHistory()
+        }
+    }
+    
     LazyColumn(
         modifier = modifier
             .padding(32.dp),
@@ -323,6 +331,7 @@ fun ChatContent(
     onDrawerClick: (DrawerState) -> Unit,
     uiState: ResultState<Nothing>,
     chat: Chat,
+    onFetchHistory: () -> Unit,
     onSendChatClickListener: (Chat.Message) -> Unit,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit,
     onCancelChatClickListener: () -> Unit
@@ -364,6 +373,7 @@ fun ChatContent(
                     bottom.linkTo(chatField.top)
                     height = Dimension.fillToConstraints
                 },
+                onFetchHistory = onFetchHistory,
                 onAnalyzeRouteNavigation = onAnalyzeRouteNavigation
             )
         }
@@ -394,6 +404,7 @@ fun ChatContentPreview() {
             chat = Chat(
                 messages = emptyList(),
             ),
+            onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
             onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
@@ -441,6 +452,7 @@ fun ChatContentWithMessagePreview() {
             chat = Chat(
                 messages = messages,
             ),
+            onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
             onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },

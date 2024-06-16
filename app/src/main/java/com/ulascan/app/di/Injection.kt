@@ -7,8 +7,8 @@ import com.ulascan.app.data.remote.api.ApiConfig
 import com.ulascan.app.data.remote.api.ApiService
 import com.ulascan.app.data.remote.dataStore
 import com.ulascan.app.data.repository.ChatRepository
-import com.ulascan.app.data.repository.AuthenticatedChatRepository
-import com.ulascan.app.data.repository.GuestChatRepository
+import com.ulascan.app.data.repository.chat.AuthenticatedChatRepository
+import com.ulascan.app.data.repository.chat.GuestChatRepository
 import com.ulascan.app.data.repository.UserRepository
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
@@ -38,7 +38,8 @@ object Injection {
     
     fun getUserRepository(context: Context): UserRepository {
         val userPreferences = UserPreferences.getInstance(context.dataStore)
+        val apiService = getApiService(context)
         
-        return UserRepository(userPreferences)
+        return UserRepository(userPreferences, apiService)
     }
 }

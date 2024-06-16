@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,10 +25,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.ulascan.app.data.remote.response.Chat
 import com.ulascan.app.ui.factory.ChatViewModelFactory
-import com.ulascan.app.data.remote.UserPreferences
 import com.ulascan.app.data.repository.UserRepository
-import com.ulascan.app.data.remote.dataStore
 import com.ulascan.app.data.remote.response.AnalysisData
+import com.ulascan.app.data.remote.response.HistoriesItem
+import com.ulascan.app.data.states.ResultState
+import com.ulascan.app.di.Injection
 import com.ulascan.app.ui.screens.auth.AuthViewModel
 import com.ulascan.app.ui.factory.AuthenticationViewModelFactory
 import com.ulascan.app.ui.screens.auth.login.LoginScreen
@@ -36,6 +38,7 @@ import com.ulascan.app.ui.screens.auth.register.RegisterScreen
 import com.ulascan.app.ui.screens.auth.register.RegisterViewModel
 import com.ulascan.app.ui.screens.chat.ChatScreen
 import com.ulascan.app.ui.screens.chat.ChatViewModel
+import com.ulascan.app.ui.screens.chat.viewmodel.AuthenticatedChatViewModel
 import com.ulascan.app.ui.screens.detailAnalysis.DetailAnalysisScreen
 import com.ulascan.app.ui.screens.initial.InitialScreen
 import com.ulascan.app.ui.theme.UlaScanTheme
@@ -44,8 +47,7 @@ import kotlin.reflect.typeOf
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userPreferences = UserPreferences.getInstance(dataStore)
-        val userRepository = UserRepository(userPreferences)
+        val userRepository = Injection.getUserRepository(applicationContext)
 
         setContent {
             UlaScanTheme {
@@ -83,26 +85,27 @@ class MainActivity : ComponentActivity() {
             factory = AuthenticationViewModelFactory(userRepository)
         )
         val user by authViewModel.user.collectAsState()
+        val authState = authViewModel.uiState.collectAsState()
         
         NavHost(
             navController = navController,
             modifier = modifier,
             startDestination = startDestination,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
         ) {
             composable(
                 route = NavigationItem.Initial.route,
-                enterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(700)
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(700)
-                    )
-                }
             ) {
                 InitialScreen(navController)
             }
@@ -135,20 +138,15 @@ class MainActivity : ComponentActivity() {
             
             composable(
                 route = NavigationItem.Chat.route,
-                enterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(700)
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(700)
-                    )
-                }
             ) {
                 val isLoggedIn = user.isLoggedIn
+                
+                if (isLoggedIn) {
+                    LaunchedEffect(Unit) {
+                        authViewModel.getUserInformation(user.token)
+                    }
+                }
+                
                 val chatViewModel = viewModel<ChatViewModel>(factory = 
                     ChatViewModelFactory.getInstance(
                         LocalContext.current, 
@@ -156,15 +154,39 @@ class MainActivity : ComponentActivity() {
                     )
                 )
 
+                if ( authState.value is ResultState.Error ) {
+                    navController.navigate(NavigationItem.Login.route) {
+                        popUpTo(NavigationItem.Chat.route) { inclusive = true }
+                    }
+                }
+                
                 val uiState = chatViewModel.uiState.collectAsState()
                 val conversation = chatViewModel.conversation.collectAsState()
-
+                    
+                var historyState: State<ResultState<Nothing>> = remember { mutableStateOf(ResultState.Default) }
+                var history: State<List<HistoriesItem>> = remember { mutableStateOf(emptyList()) }
+                
+                if (chatViewModel is AuthenticatedChatViewModel) {
+                    historyState = chatViewModel.historyState.collectAsState()
+                    history = chatViewModel.history.collectAsState()
+                }
+                
                 ChatScreen(
+                    authState = authState.value,
                     uiState = uiState.value,
+                    historyState = historyState.value,
                     chat = Chat(
                         messages = conversation.value,
                     ),
+                    history = history.value,
                     isLoggedIn = user.isLoggedIn,
+                    onFetchHistory = { 
+                      if ( chatViewModel is AuthenticatedChatViewModel ) {
+                          chatViewModel.getHistory()
+                      } else {
+                          Unit
+                      }
+                    },
                     onSendChatClickListener = { message -> chatViewModel.sendMessage(message) },
                     onCancelChatClickListener = { chatViewModel.cancelRequest() },
                     onAnalyzeRouteNavigation = { 
