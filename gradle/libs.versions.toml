@@ -23,6 +23,7 @@ compose = "1.4.0"
 material3 = "1.0.0-alpha10"
 jetpackLoading = "0.8.0"
 coil = "2.6.0"
+toast = "2.4.0"
 
 [libraries]
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
@@ -58,6 +59,7 @@ coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutine
 jetpackLoading = { group = "com.ehsanmsz", name = "msz-progress-indicator", version.ref = "jetpackLoading"}
 kotlinSerialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 coilCompose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+styleableToast = { group = "io.github.muddz", name = "styleabletoast", version.ref = "toast" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

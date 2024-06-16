@@ -1,11 +1,13 @@
 package com.ulascan.app.ui.screens.auth.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +51,8 @@ import com.ulascan.app.ui.screens.auth.register.LoginViewModel
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
+import com.ulascan.app.utils.toCapitalize
+import io.github.muddz.styleabletoast.StyleableToast
 
 
 @Composable
@@ -58,7 +62,8 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
+
+    val context = LocalContext.current
     
     LaunchedEffect(uiState) {
         if (uiState is LoginUiState.Success) {
@@ -68,7 +73,12 @@ fun LoginScreen(
                 popUpTo(NavigationItem.Chat.route) { inclusive = true }
             }
         } else if (uiState is LoginUiState.Error) {
-            snackbarHostState.showSnackbar((uiState as LoginUiState.Error).message)
+            StyleableToast.makeText(
+                context, 
+                (uiState as LoginUiState.Error).message.toCapitalize(), 
+                Toast.LENGTH_SHORT, 
+                R.style.toastError
+            ).show()
         }
     }
 

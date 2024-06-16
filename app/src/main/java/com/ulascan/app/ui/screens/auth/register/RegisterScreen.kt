@@ -1,5 +1,6 @@
 package com.ulascan.app.ui.screens.auth.register
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +49,7 @@ import com.ulascan.app.ui.screens.auth.FormInput
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
+import io.github.muddz.styleabletoast.StyleableToast
 
 @Composable
 fun RegisterScreen(
@@ -55,7 +58,7 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     LaunchedEffect(uiState) {
         if (uiState is RegisterUiState.Success) {
@@ -65,6 +68,14 @@ fun RegisterScreen(
             navController.navigate(NavigationItem.Login.route) {
                 popUpTo(NavigationItem.Register.route) { inclusive = true }
             }
+        } else if (uiState is RegisterUiState.Error) {
+            val message = (uiState as RegisterUiState.Error).message
+            StyleableToast.makeText(
+                context,
+                message,
+                Toast.LENGTH_SHORT,
+                R.style.toastError
+            ).show()
         }
     }
 

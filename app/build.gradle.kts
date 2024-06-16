@@ -83,7 +83,8 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.kotlinSerialization)
     implementation(libs.coilCompose)
-    
+    implementation(libs.styleableToast)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
