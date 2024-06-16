@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ulascan.app.data.repository.UserRepository
 import com.ulascan.app.data.remote.api.ApiConfig
 import com.ulascan.app.data.remote.request.LoginRequest
+import com.ulascan.app.utils.getErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -31,7 +32,7 @@ private val userRepository: UserRepository
                     _uiState.value = LoginUiState.Error("Login failed")
                 }
             } catch (e: HttpException) {
-                _uiState.value = LoginUiState.Error(e.message())
+                _uiState.value = LoginUiState.Error(e.getErrorMessage())
             } catch (e: Exception) {
                 _uiState.value = LoginUiState.Error(e.message ?: "Unknown error")
             }

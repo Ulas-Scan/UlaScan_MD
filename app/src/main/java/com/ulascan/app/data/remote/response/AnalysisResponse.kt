@@ -73,4 +73,8 @@ data class AnalysisData(
 
     @field:SerializedName("shop_name")
     val shopName: String,
+
+    @field:SerializedName("shop_avatar")
+    val shopAvatar: String,
+    
 ) : Parcelable

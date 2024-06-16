@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,16 +24,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.ehsanmsz.mszprogressindicator.progressindicator.BallClipRotateProgressIndicator
 import com.ulascan.app.R
 import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.ui.theme.Brand100
 import com.ulascan.app.ui.theme.Brand900
+import com.ulascan.app.ui.theme.Keyboard
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.utils.Helper
 
@@ -53,7 +60,7 @@ fun UserMessage(text: String) {
 }
 
 @Composable
-fun ProductDescription(productName: String, shopName: String, productDescription: String, images: List<String>) {
+fun ProductDescription(productName: String, shopName: String, shopAvatar: String, productDescription: String, images: List<String>) {
   Column(
       modifier =
       Modifier
@@ -72,11 +79,23 @@ fun ProductDescription(productName: String, shopName: String, productDescription
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically) {
-          Image(
-              painter = painterResource(id = R.drawable.logo_item),
+        SubcomposeAsyncImage(
+              model = shopAvatar,
+              loading = { 
+                  BallClipRotateProgressIndicator(
+                    color = Keyboard,
+                    minDiameter = 10.dp, 
+                    maxDiameter = 20.dp,
+                  )
+              },  
               contentDescription = stringResource(id = R.string.app_name),
-              modifier = Modifier.size(30.dp))
-          Text(
+              contentScale = ContentScale.FillBounds,
+              modifier = Modifier
+                  .clip(CircleShape)
+                  .size(30.dp),
+            
+          )
+        Text(
               text = shopName,
               color = Color.Black,
               style = MaterialTheme.typography.labelMedium,
@@ -90,18 +109,21 @@ fun ProductDescription(productName: String, shopName: String, productDescription
         style = MaterialTheme.typography.labelMedium,
         fontWeight = FontWeight.Normal,
     )
-      LazyRow (
-          horizontalArrangement = Arrangement.spacedBy(7.dp),
-      ) {
+    Spacer(modifier = Modifier.height(12.dp))
+    LazyRow (
+      horizontalArrangement = Arrangement.spacedBy(7.dp),
+    ) {
         items(images.size) { index ->
           Image(
               painter = rememberAsyncImagePainter(
                   model = images[index],
+                  placeholder = painterResource(id = R.drawable.iphone_cut_hdpi),
               ),
               contentDescription = stringResource(id = R.string.app_name),
-              modifier = Modifier.size(60.dp))
+              modifier = Modifier.size(60.dp)
+          )
         }
-      }
+    }
   }
 }
 
@@ -166,6 +188,7 @@ fun ResponseMessage(
                 shopName = data.shopName,
                 productName = data.productName,
                 productDescription = data.productDescription,
+                shopAvatar = data.shopAvatar,
                 images = data.imageUrls
             )
             AnalysisSummary(data.summary)

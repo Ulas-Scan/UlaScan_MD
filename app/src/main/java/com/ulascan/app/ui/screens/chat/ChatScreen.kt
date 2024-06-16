@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ulascan.app.NavigationItem
 import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.data.remote.response.Chat
 import com.ulascan.app.data.remote.response.HistoriesItem
@@ -61,7 +62,7 @@ fun ChatScreen(
         targetValue = if (drawerState.isOpened()) offsetValue else 0.dp,
         label = "Animated Offset"
     )
-
+    
     Box(
         modifier = modifier
             .background(Weak100)

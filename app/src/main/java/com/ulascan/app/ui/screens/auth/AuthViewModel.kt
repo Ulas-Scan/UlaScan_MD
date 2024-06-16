@@ -37,7 +37,7 @@ class AuthViewModel(
             val state = repository.getUserInformation(token)
 
             if (state is ResultState.Error) {
-                _user.emit(UserModel("", false))
+                _user.value = UserModel("", false)
             }
             
             uiState.emit(state)

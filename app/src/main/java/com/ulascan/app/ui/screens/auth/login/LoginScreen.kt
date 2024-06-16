@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,7 +58,8 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
-
+    val snackbarHostState = remember { SnackbarHostState() }
+    
     LaunchedEffect(uiState) {
         if (uiState is LoginUiState.Success) {
             email = ""
@@ -65,6 +67,8 @@ fun LoginScreen(
             navController.navigate(NavigationItem.Chat.route) {
                 popUpTo(NavigationItem.Chat.route) { inclusive = true }
             }
+        } else if (uiState is LoginUiState.Error) {
+            snackbarHostState.showSnackbar((uiState as LoginUiState.Error).message)
         }
     }
 

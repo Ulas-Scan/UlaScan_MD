@@ -293,7 +293,7 @@ fun ProductStats(
                 modifier = Modifier.size(46.dp)
             )
             Text(
-                text = "${String.format("%.1f", stars).toDouble()}/5.0",
+                text = "${String.format("%.1f", (stars.toString().toDoubleOrNull() ?: 0.0 ))}/5.0",
                 color = Neutral900,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,

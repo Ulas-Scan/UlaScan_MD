@@ -110,7 +110,7 @@ class MainActivity : ComponentActivity() {
                 InitialScreen(navController)
             }
             composable(NavigationItem.Register.route) {
-                if (user.isLoggedIn) {
+                if (user.isLoggedIn && (authState.value !is ResultState.Error || authState.value !is ResultState.Loading ) ) {
                     LaunchedEffect(Unit) {
                         navController.navigate(NavigationItem.Chat.route) {
                             popUpTo(NavigationItem.Register.route) { inclusive = true }
@@ -155,9 +155,7 @@ class MainActivity : ComponentActivity() {
                 )
 
                 if ( authState.value is ResultState.Error ) {
-                    navController.navigate(NavigationItem.Login.route) {
-                        popUpTo(NavigationItem.Chat.route) { inclusive = true }
-                    }
+                    navController.navigate(NavigationItem.Login.route)
                 }
                 
                 val uiState = chatViewModel.uiState.collectAsState()

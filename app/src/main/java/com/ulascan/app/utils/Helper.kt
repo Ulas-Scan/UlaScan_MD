@@ -28,7 +28,8 @@ object Helper {
             adminResponse = 100.00,
             productCondition = 92.59,
             summary =
-            "Secara keseluruhan, produk Tropicana Slim Cafe Latte mendapatkan ulasan yang positif. Pengguna menyukai rasanya yang enak, meskipun beberapa menganggapnya terlalu manis. Pengiriman cepat dan pengemasan aman diapresiasi oleh banyak pengguna. Produk ini juga dipuji karena rendah kalori dan bebas gula, menjadikannya pilihan yang lebih sehat. Beberapa pengguna menyebutkan bahwa mereka telah menjadi pelanggan tetap dan akan membeli lagi."
+            "Secara keseluruhan, produk Tropicana Slim Cafe Latte mendapatkan ulasan yang positif. Pengguna menyukai rasanya yang enak, meskipun beberapa menganggapnya terlalu manis. Pengiriman cepat dan pengemasan aman diapresiasi oleh banyak pengguna. Produk ini juga dipuji karena rendah kalori dan bebas gula, menjadikannya pilihan yang lebih sehat. Beberapa pengguna menyebutkan bahwa mereka telah menjadi pelanggan tetap dan akan membeli lagi.",
+            shopAvatar = "https://images.tokopedia.net/img/cache/215-square/GAnVPX/2021/3/30/9ee6fbe9-1452-40f6-9b56-42a5bd14e5d5.png"
         )
     }
     
@@ -71,6 +72,7 @@ object Helper {
             shopName = generateAnalysisData().shopName,
             productDescription = generateAnalysisData().productDescription,
             imageUrls = generateAnalysisData().imageUrls,
+            shopAvatar = generateAnalysisData().shopAvatar
         )
     }
 }
