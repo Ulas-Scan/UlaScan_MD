@@ -44,7 +44,8 @@
     <string name="admin_response_text">Respon Admin</string>
     <string name="sign_in_or_create_an_account">Masuk atau buat akun</string>
     <string name="auth_description"> Membuka fitur riwayat analisis. </string>
-    
+    <string name="retry"> Coba Lagi </string>
+
     <string-array name="guides">
         <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>
         <item>Maecenas sed lectus a libero pellentesque fermentum. Sed vitae elit quis felis aliquet varius sed vel odio.</item>

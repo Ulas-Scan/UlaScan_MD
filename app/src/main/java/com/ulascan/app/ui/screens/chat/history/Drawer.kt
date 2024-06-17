@@ -40,6 +40,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ehsanmsz.mszprogressindicator.progressindicator.BallPulseProgressIndicator
 import com.ulascan.app.R
 import com.ulascan.app.data.remote.response.AnalysisData
@@ -50,14 +54,35 @@ import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.Keyboard
 import com.ulascan.app.ui.theme.Neutral900
 import com.ulascan.app.ui.theme.UlaScanTheme
+import com.ulascan.app.utils.ErrorMessage
 import com.ulascan.app.utils.Helper
+import com.ulascan.app.utils.LoadingNextPageItem
 import io.eyram.iconsax.IconSax
+import kotlinx.coroutines.flow.flowOf
+
+@Composable
+fun BallPulseLoading() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        BallPulseProgressIndicator(
+            color = Brand900,
+            animationDuration = 800,
+            animationDelay = 200,
+            startDelay = 0,
+            ballCount = 4
+        )
+    }
+}
 
 @Composable
 fun Drawer(
     authState: ResultState<UserResponse>,
     historyState: ResultState<Nothing>,
-    history: List<HistoriesItem>,
+    history: LazyPagingItems<HistoriesItem>,
     isLoggedIn: Boolean = false,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit,
     onLoginDrawerNavigation: () -> Unit,
@@ -71,20 +96,7 @@ fun Drawer(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if ( authState is ResultState.Loading || historyState is ResultState.Loading ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                BallPulseProgressIndicator(
-                    color = Brand900,
-                    animationDuration = 800,
-                    animationDelay = 200,
-                    startDelay = 0,
-                    ballCount = 4
-                )
-            }
+            BallPulseLoading()
         } else {
             ConstraintLayout(
                 modifier = Modifier
@@ -125,7 +137,9 @@ fun Drawer(
                                     tint = Keyboard
                                 )
                             },
-                            modifier = Modifier.padding(horizontal = 12.dp).fillMaxWidth(),
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp)
+                                .fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor = Color.Transparent,
                                 focusedBorderColor = Color.Transparent,
@@ -148,21 +162,63 @@ fun Drawer(
                             .padding(horizontal = 24.dp)
                             .fillMaxWidth()
                     ) {
-                        items(history.size) { index ->
-                            Text(
-                                text = history[index].productName,
-                                style = MaterialTheme.typography.titleSmall,
-                                color = Neutral900,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1, 
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier
-                                    .padding(12.dp)
-                                    .clickable {
-                                        val analysisData = Helper.convertHistoryDataToAnalysisData(history[index])
-                                        onAnalyzeRouteNavigation(analysisData)
-                                    },
+                        items(history.itemCount) { index ->
+                            history[index]?.let {
+                                Text(
+                                    text = it.productName,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = Neutral900,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier
+                                        .padding(12.dp)
+                                        .clickable {
+                                            val analysisData = history[index]?.let { it1 ->
+                                                Helper.convertHistoryDataToAnalysisData(
+                                                    it1
+                                                )
+                                            }
+                                            if (analysisData != null) {
+                                                onAnalyzeRouteNavigation(analysisData)
+                                            }
+                                        },
                                 )
+                            }
+                        }
+                        history.apply { 
+                            when {
+                                loadState.refresh is LoadState.Loading -> {
+                                    item {
+                                        LoadingNextPageItem(modifier = Modifier)
+                                    }
+                                }
+                                loadState.refresh is LoadState.Error -> {
+                                    val error = history.loadState.refresh as LoadState.Error
+                                    item {
+                                        ErrorMessage(
+                                            modifier = Modifier.fillParentMaxSize(),
+                                            message = error.error.localizedMessage!!,
+                                            onClickRetry = { retry() }
+                                        )
+                                    }
+                                }
+                                loadState.append is LoadState.Loading -> {
+                                    item { 
+                                        LoadingNextPageItem(modifier = Modifier)
+                                    }
+                                }
+                                loadState.append is LoadState.Error -> {
+                                    val error = history.loadState.append as LoadState.Error
+                                    item {
+                                        ErrorMessage(
+                                            modifier = Modifier,
+                                            message = error.error.localizedMessage!!,
+                                            onClickRetry = { retry() }
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 } else {
@@ -274,7 +330,7 @@ fun DrawerPreview() {
         Drawer(
             authState = ResultState.Default,
             historyState = ResultState.Default,
-            history = historyItems,
+            history = flowOf(PagingData.from(historyItems)).collectAsLazyPagingItems(),
             isLoggedIn = true,
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
             onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },

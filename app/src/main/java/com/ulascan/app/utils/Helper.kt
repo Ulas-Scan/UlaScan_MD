@@ -1,9 +1,7 @@
 package com.ulascan.app.utils
 
 import com.ulascan.app.data.remote.response.AnalysisData
-import com.ulascan.app.data.remote.response.HistoriesData
 import com.ulascan.app.data.remote.response.HistoriesItem
-import com.ulascan.app.ui.screens.chat.history.HistoryItem
 
 object Helper {
     fun generateAnalysisData(): AnalysisData {

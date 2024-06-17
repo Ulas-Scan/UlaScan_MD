@@ -8,7 +8,7 @@ import com.ulascan.app.ui.screens.chat.viewmodel.AuthenticatedChatViewModel
 import com.ulascan.app.ui.screens.chat.ChatViewModel
 import com.ulascan.app.ui.screens.chat.viewmodel.GuestChatViewModel
 
-class ChatViewModelFactory private constructor(private val applicationContext: Context, private val isLoggedIn: Boolean) :
+class ChatViewModelFactory private constructor(private val applicationContext: Context, private val isLoggedIn: Boolean, private val token: String) :
     ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T = when (modelClass) {
@@ -26,15 +26,15 @@ class ChatViewModelFactory private constructor(private val applicationContext: C
         @Volatile
         private var instance: ChatViewModelFactory? = null
         
-        fun getInstance(context: Context, isLoggedIn: Boolean = false): ChatViewModelFactory {
+        fun getInstance(context: Context, isLoggedIn: Boolean = false, token: String = ""): ChatViewModelFactory {
             synchronized(this) {
-                if (instance?.isLoggedIn != isLoggedIn) {
+                if (instance?.isLoggedIn != isLoggedIn || instance?.token != token) {
                     instance = null
                 }
             }
             
             return instance ?: synchronized(this) {
-                instance ?: ChatViewModelFactory(context.applicationContext, isLoggedIn)
+                instance ?: ChatViewModelFactory(context.applicationContext, isLoggedIn, token)
             }.also { instance = it }
         }
     }

@@ -24,6 +24,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ulascan.app.data.remote.response.Chat
 import com.ulascan.app.ui.factory.ChatViewModelFactory
 import com.ulascan.app.data.repository.UserRepository
@@ -43,6 +46,7 @@ import com.ulascan.app.ui.screens.chat.viewmodel.AuthenticatedChatViewModel
 import com.ulascan.app.ui.screens.detailAnalysis.DetailAnalysisScreen
 import com.ulascan.app.ui.screens.initial.InitialScreen
 import com.ulascan.app.ui.theme.UlaScanTheme
+import kotlinx.coroutines.flow.flowOf
 import kotlin.reflect.typeOf
 
 class MainActivity : ComponentActivity() {
@@ -153,7 +157,8 @@ class MainActivity : ComponentActivity() {
                 val chatViewModel = viewModel<ChatViewModel>(factory = 
                     ChatViewModelFactory.getInstance(
                         LocalContext.current, 
-                        isLoggedIn = isLoggedIn
+                        isLoggedIn = isLoggedIn,
+                        token = user.token
                     )
                 )
 
@@ -167,11 +172,11 @@ class MainActivity : ComponentActivity() {
                 val conversation = chatViewModel.conversation.collectAsState()
                     
                 var historyState: State<ResultState<Nothing>> = remember { mutableStateOf(ResultState.Default) }
-                var history: State<List<HistoriesItem>> = remember { mutableStateOf(emptyList()) }
+                var history: LazyPagingItems<HistoriesItem> = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems()
                 
                 if (chatViewModel is AuthenticatedChatViewModel) {
                     historyState = chatViewModel.historyState.collectAsState()
-                    history = chatViewModel.history.collectAsState()
+                    history = chatViewModel.history.collectAsLazyPagingItems()
                 }
                 
                 ChatScreen(
@@ -181,7 +186,7 @@ class MainActivity : ComponentActivity() {
                     chat = Chat(
                         messages = conversation.value,
                     ),
-                    history = history.value,
+                    history = history,
                     isLoggedIn = user.isLoggedIn,
                     onFetchHistory = { 
                       if ( chatViewModel is AuthenticatedChatViewModel ) {

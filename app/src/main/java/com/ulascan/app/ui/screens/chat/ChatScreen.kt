@@ -19,6 +19,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ulascan.app.NavigationItem
 import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.data.remote.response.Chat
@@ -31,6 +34,7 @@ import com.ulascan.app.ui.screens.chat.history.DrawerState
 import com.ulascan.app.ui.screens.chat.history.isOpened
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
+import kotlinx.coroutines.flow.flowOf
 import kotlin.math.roundToInt
 
 @Composable
@@ -39,7 +43,7 @@ fun ChatScreen(
     uiState: ResultState<Nothing>,
     historyState: ResultState<Nothing>,
     chat: Chat,
-    history: List<HistoriesItem>,
+    history: LazyPagingItems<HistoriesItem>,
     isLoggedIn: Boolean = false,
     onFetchHistory: () -> Unit,
     onSendChatClickListener: (Chat.Message) -> Unit,
@@ -108,7 +112,7 @@ fun ChatScreenPreview() {
             uiState = ResultState.Default,
             historyState = ResultState.Default,
             chat = chat,
-            history = emptyList(),
+            history = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems(),
             onFetchHistory = { Log.d("ChatScreen", "Fetch history") }, 
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, 
             onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },  
@@ -142,7 +146,7 @@ fun ChatScreenWithMessagePreview() {
             uiState = ResultState.Default,
             historyState = ResultState.Default,
             chat = chat,
-            history = emptyList(),
+            history = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems(),
             onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, 
             onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },  

@@ -43,6 +43,7 @@
     <string name="admin_response_text">Admin Response</string>
     <string name="sign_in_or_create_an_account">Sign in or create an account</string>
     <string name="auth_description"> Unlock history analysis feature. </string>
+    <string name="retry"> Retry </string>
 
     <string-array name="guides">
         <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>

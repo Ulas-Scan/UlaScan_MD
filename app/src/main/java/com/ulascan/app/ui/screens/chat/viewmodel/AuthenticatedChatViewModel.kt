@@ -1,18 +1,21 @@
 package com.ulascan.app.ui.screens.chat.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.ulascan.app.data.remote.response.HistoriesItem
 import com.ulascan.app.data.repository.ChatRepository
 import com.ulascan.app.data.repository.chat.AuthenticatedChatRepository
 import com.ulascan.app.data.states.ResultState
 import com.ulascan.app.ui.screens.chat.ChatViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 class AuthenticatedChatViewModel(
     private val chatRepository: ChatRepository
 ): ChatViewModel(chatRepository) {
-    private val _history = MutableStateFlow<List<HistoriesItem>>(emptyList())
+    private val _history = MutableStateFlow<PagingData<HistoriesItem>>(PagingData.empty())
     
     val history
         get() = _history
@@ -26,19 +29,14 @@ class AuthenticatedChatViewModel(
     }
     
     fun getHistory() {
-        viewModelScope.launch { 
-            _historyState.emit(ResultState.Loading)
+        viewModelScope.launch {
             if (chatRepository is AuthenticatedChatRepository) {
-                when (val result = chatRepository.getHistory()) {
-                    is ResultState.Success -> {
-                        _history.emit(result.data.data.histories)
+                chatRepository.getHistoryWithPaging()
+                    .distinctUntilChanged()
+                    .cachedIn(viewModelScope)
+                    .collect {histories ->
+                        _history.emit(histories)
                     }
-                    else -> Unit
-                }.also {
-                    _historyState.emit(ResultState.Default)
-                }
-            } else {
-                _historyState.emit(ResultState.Error("Invalid repository"))
             }
         }
     }
