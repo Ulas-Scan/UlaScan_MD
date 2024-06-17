@@ -33,8 +33,8 @@ import com.ulascan.app.ui.screens.chat.history.DrawerState
 import com.ulascan.app.ui.screens.chat.history.isOpened
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
-import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.flowOf
+import kotlin.math.roundToInt
 
 @Composable
 fun ChatScreen(

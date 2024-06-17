@@ -1,6 +1,5 @@
 package com.ulascan.app.utils
 
-import android.util.Log
 import com.google.gson.Gson
 import com.ulascan.app.data.remote.response.ErrorResponse
 import java.util.regex.Pattern
