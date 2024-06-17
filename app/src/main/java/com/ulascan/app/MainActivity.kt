@@ -1,6 +1,7 @@
 package com.ulascan.app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -110,7 +111,7 @@ class MainActivity : ComponentActivity() {
                 InitialScreen(navController)
             }
             composable(NavigationItem.Register.route) {
-                if (user.isLoggedIn && (authState.value !is ResultState.Error || authState.value !is ResultState.Loading ) ) {
+                if (user.isLoggedIn  && (authState.value !is ResultState.Error || authState.value !is ResultState.Loading ) ) {
                     LaunchedEffect(Unit) {
                         navController.navigate(NavigationItem.Chat.route) {
                             popUpTo(NavigationItem.Register.route) { inclusive = true }
@@ -123,7 +124,9 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(NavigationItem.Login.route) {
-                if (user.isLoggedIn) {
+                Log.d("Login Route", "User: $user")
+                Log.d("Login Route", "Auth State Error?: ${authState.value is ResultState.Error}")
+                if (user.isLoggedIn && (authState.value !is ResultState.Error || authState.value !is ResultState.Loading ) ) {
                     LaunchedEffect(Unit) {
                         navController.navigate(NavigationItem.Chat.route) {
                             popUpTo(NavigationItem.Login.route) { inclusive = true }
@@ -155,7 +158,9 @@ class MainActivity : ComponentActivity() {
                 )
 
                 if ( authState.value is ResultState.Error ) {
-                    navController.navigate(NavigationItem.Login.route)
+                    LaunchedEffect(Unit) {
+                        navController.navigate(NavigationItem.Login.route)
+                    }
                 }
                 
                 val uiState = chatViewModel.uiState.collectAsState()

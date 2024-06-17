@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
     implementation(libs.androidxDatastorePreferences)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)

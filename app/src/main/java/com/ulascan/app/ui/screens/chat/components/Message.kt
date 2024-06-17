@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -92,8 +94,10 @@ fun ProductDescription(productName: String, shopName: String, shopAvatar: String
               contentScale = ContentScale.FillBounds,
               modifier = Modifier
                   .clip(CircleShape)
-                  .size(30.dp),
-            
+                  .size(30.dp)
+                  .wrapContentHeight(align = Alignment.CenterVertically)
+                  .wrapContentWidth(align = Alignment.CenterHorizontally)
+            ,
           )
         Text(
               text = shopName,
@@ -114,14 +118,24 @@ fun ProductDescription(productName: String, shopName: String, shopAvatar: String
       horizontalArrangement = Arrangement.spacedBy(7.dp),
     ) {
         items(images.size) { index ->
-          Image(
-              painter = rememberAsyncImagePainter(
-                  model = images[index],
-                  placeholder = painterResource(id = R.drawable.iphone_cut_hdpi),
-              ),
-              contentDescription = stringResource(id = R.string.app_name),
-              modifier = Modifier.size(60.dp)
-          )
+            SubcomposeAsyncImage(
+                model = images[index],
+                loading = {
+                    BallClipRotateProgressIndicator(
+                        color = Keyboard,
+                        minDiameter = 20.dp,
+                        maxDiameter = 30.dp,
+                    )
+                }, 
+                contentDescription = stringResource(id = R.string.app_name),
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .wrapContentHeight(align = Alignment.CenterVertically)
+                    .wrapContentWidth(align = Alignment.CenterHorizontally)
+                ,
+            )
         }
     }
   }
