@@ -23,8 +23,8 @@
     <string name="register_hint">Register</string>
     <string name="register_text">Register Now!</string>
     <string name="register_guides"> Enter your data to register\non this application! </string>
-    <string name="find_your_best_product"> Find\nYour Best Product! </string>
-    <string name="initial_description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent at malesuada arcu, a euismod ipsum. Maecenas pretium elit a accumsan feugiat. </string>
+    <string name="find_your_best_product"> Automated Review Analysis </string>
+    <string name="initial_description"> Discover customer sentiments to make your purchasing decisions easier. </string>
     <string name="get_started"> Get Started </string>
     <string name="positive_review_key">Positive Review</string>
     <string name="negative_review_key">Negative Review</string>
@@ -46,8 +46,8 @@
     <string name="retry"> Retry </string>
 
     <string-array name="guides">
-        <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>
-        <item>Maecenas sed lectus a libero pellentesque fermentum. Sed vitae elit quis felis aliquet varius sed vel odio.</item>
-        <item>Praesent lobortis blandit bibendum. Etiam ligula urna, imperdiet in lacus in.</item>
+        <item>Paste the link for the product you want to buy into the text box below. </item>
+        <item>Our application will process the link you provide.</item>
+        <item>Get an accurate analysis of the product you are going to buy!</item>
     </string-array>
 </resources>

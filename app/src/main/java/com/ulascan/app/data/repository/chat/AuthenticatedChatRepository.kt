@@ -24,13 +24,13 @@ class AuthenticatedChatRepository(private val apiService: ApiService): UserChatR
         }
     }
     
-    override suspend fun getHistoryWithPaging(): Flow<PagingData<HistoriesItem>> {
+    override suspend fun getHistoryWithPaging(keywords: String): Flow<PagingData<HistoriesItem>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 5,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { HistoryPagingSource(apiService) }
+            pagingSourceFactory = { HistoryPagingSource(apiService, keywords) }
         ).flow    
     }
     

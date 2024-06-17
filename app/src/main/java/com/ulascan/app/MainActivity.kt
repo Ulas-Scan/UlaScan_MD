@@ -188,9 +188,9 @@ class MainActivity : ComponentActivity() {
                     ),
                     history = history,
                     isLoggedIn = user.isLoggedIn,
-                    onFetchHistory = { 
+                    onFetchHistory = { keywords ->
                       if ( chatViewModel is AuthenticatedChatViewModel ) {
-                          chatViewModel.getHistory()
+                          chatViewModel.getHistory(keywords)
                       } else {
                           Unit
                       }

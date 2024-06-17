@@ -24,8 +24,8 @@
     <string name="register_hint">Daftar</string>
     <string name="register_text">Daftarkan Dirimu!</string>
     <string name="register_guides">Masukkan datamu untuk mendaftar\npada aplikasi ini! </string>
-    <string name="find_your_best_product"> Temukan\nProduk Terbaikmu! </string>
-    <string name="initial_description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent at malesuada arcu, a euismod ipsum. Maecenas pretium elit a accumsan feugiat. </string>
+    <string name="find_your_best_product"> Analisis Ulasan Otomatis </string>
+    <string name="initial_description"> Temukan sentimen pelanggan tersembunyi untuk memudahkan keputusan pembelian Anda. </string>
     <string name="get_started"> Mulai Sekarang </string>
     <string name="positive_review_key">Positive Review</string>
     <string name="negative_review_key">Negative Review</string>
@@ -47,8 +47,8 @@
     <string name="retry"> Coba Lagi </string>
 
     <string-array name="guides">
-        <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>
-        <item>Maecenas sed lectus a libero pellentesque fermentum. Sed vitae elit quis felis aliquet varius sed vel odio.</item>
-        <item>Praesent lobortis blandit bibendum. Etiam ligula urna, imperdiet in lacus in.</item>
+        <item>Tempelkan link produk yang akan Anda beli ke dalam textbox dibawah.</item>
+        <item>Aplikasi kami akan memproses tautan yang Anda berikan.</item>
+        <item>Dapatkan analisis akurat produk yang akan Anda beli!</item>
     </string-array>
 </resources>

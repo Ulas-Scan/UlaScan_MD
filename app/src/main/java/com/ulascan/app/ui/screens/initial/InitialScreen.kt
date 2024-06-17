@@ -23,15 +23,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ulascan.app.NavigationItem
 import com.ulascan.app.R
 import com.ulascan.app.ui.theme.Brand100
 import com.ulascan.app.ui.theme.Brand900
+import com.ulascan.app.ui.theme.Keyboard
 import com.ulascan.app.ui.theme.UlaScanTheme
 
 
@@ -76,18 +79,23 @@ fun InitialScreen(navController: NavController = rememberNavController()) {
 
                 ) {
 
-                Text(text = stringResource(id = R.string.find_your_best_product),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        textAlign = TextAlign.Start,
-                    )
+                Text(
+                    text = stringResource(id = R.string.find_your_best_product),
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Start,
+                    fontSize = 36.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    lineHeight = 40.sp,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(text = stringResource(id = R.string.initial_description),
+                Text(
+                    text = stringResource(id = R.string.initial_description),
                     style = MaterialTheme.typography.labelMedium.copy(
                         textAlign = TextAlign.Start,
-                        color = Color.Gray)
+                        color = Keyboard
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))

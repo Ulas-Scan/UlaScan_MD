@@ -28,10 +28,10 @@ class AuthenticatedChatViewModel(
         getHistory()
     }
     
-    fun getHistory() {
+    fun getHistory(keywords: String = "") {
         viewModelScope.launch {
             if (chatRepository is AuthenticatedChatRepository) {
-                chatRepository.getHistoryWithPaging()
+                chatRepository.getHistoryWithPaging(keywords = keywords)
                     .distinctUntilChanged()
                     .cachedIn(viewModelScope)
                     .collect {histories ->

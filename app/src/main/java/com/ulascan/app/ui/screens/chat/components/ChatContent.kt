@@ -162,12 +162,12 @@ fun ChatMessages(
     uiState: ResultState<Nothing>,
     messages: List<Chat.Message>,
     modifier: Modifier = Modifier,
-    onFetchHistory: () -> Unit,
+    onFetchHistory: (String) -> Unit,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit
 ) {
     LaunchedEffect(messages) {
         if (messages.isNotEmpty()) {
-            onFetchHistory()
+            onFetchHistory("")
         }
     }
     
@@ -270,6 +270,7 @@ fun ChatField(
                         color = Keyboard,
                     )
                 },
+                singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
@@ -349,7 +350,7 @@ fun ChatContent(
     uiState: ResultState<Nothing>,
     chat: Chat,
     isLoggedIn: Boolean,
-    onFetchHistory: () -> Unit,
+    onFetchHistory: (String) -> Unit,
     onSendChatClickListener: (Chat.Message) -> Unit,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit,
     onCancelChatClickListener: () -> Unit,

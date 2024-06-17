@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -27,14 +29,21 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -85,10 +94,14 @@ fun Drawer(
     history: LazyPagingItems<HistoriesItem>,
     isLoggedIn: Boolean = false,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit,
+    onFetchHistory: (String) -> Unit,
     onLoginDrawerNavigation: () -> Unit,
     onRegisterDrawerNavigation: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var keywords by remember { mutableStateOf(TextFieldValue()) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -119,8 +132,10 @@ fun Drawer(
                             .fillMaxWidth()
                     ) {
                         OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
+                            value = keywords,
+                            onValueChange = {
+                                keywords = it
+                            },
                             placeholder = {
                                 Text(
                                     text = stringResource(id = R.string.search),
@@ -128,6 +143,16 @@ fun Drawer(
                                     color = Keyboard,
                                 )
                             },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Done
+                            ),
+                            singleLine = true,
+                            keyboardActions = KeyboardActions (
+                                onDone = {
+                                    onFetchHistory(keywords.text)
+                                    keyboardController?.hide()
+                                }
+                            ),
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(
@@ -143,8 +168,8 @@ fun Drawer(
                             colors = OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor = Color.Transparent,
                                 focusedBorderColor = Color.Transparent,
-                                focusedTextColor = Color.Transparent,
-                                focusedLabelColor = Color.Transparent,
+                                focusedTextColor = Keyboard,
+                                focusedLabelColor = Keyboard,
                                 focusedContainerColor = MaterialTheme.colorScheme.background,
                                 unfocusedContainerColor = MaterialTheme.colorScheme.background
                             )
@@ -332,6 +357,7 @@ fun DrawerPreview() {
             historyState = ResultState.Default,
             history = flowOf(PagingData.from(historyItems)).collectAsLazyPagingItems(),
             isLoggedIn = true,
+            onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
             onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
             onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },

@@ -8,7 +8,8 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class HistoryPagingSource(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val keywords: String = ""
 ) : PagingSource<Int, HistoriesItem>() {
     override fun getRefreshKey(state: PagingState<Int, HistoriesItem>): Int? {
         return state.anchorPosition
@@ -19,7 +20,8 @@ class HistoryPagingSource(
             val currentPage = params.key ?: 1
             val response = apiService.getHistories(
                 page = currentPage,
-                limit = params.loadSize
+                limit = params.loadSize,
+                productName = keywords
             )
 
             LoadResult.Page(

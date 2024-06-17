@@ -14,5 +14,5 @@ interface ChatRepository {
 interface UserChatRepository: ChatRepository {
     suspend fun getHistory(): ResultState<HistoriesResponse>
     
-    suspend fun getHistoryWithPaging(): Flow<PagingData<HistoriesItem>>
+    suspend fun getHistoryWithPaging(keywords: String = ""): Flow<PagingData<HistoriesItem>>
 }
