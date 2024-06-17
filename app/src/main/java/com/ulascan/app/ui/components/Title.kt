@@ -16,27 +16,22 @@ import com.ulascan.app.ui.theme.UlaScanTheme
 
 @Composable
 fun AppTitle(modifier: Modifier = Modifier) {
-    val text = buildAnnotatedString {
-        append("Ula")
-        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold)) {
-            append("Scan")
-        }
-    }
-    Text(
-        modifier = modifier,
-        text = text,
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Medium,
-        textAlign = TextAlign.Center,
-        fontSize = 26.sp,
-        color = Brand900
-    )
+  val text = buildAnnotatedString {
+    append("Ula")
+    withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold)) { append("Scan") }
+  }
+  Text(
+      modifier = modifier,
+      text = text,
+      style = MaterialTheme.typography.titleLarge,
+      fontWeight = FontWeight.Medium,
+      textAlign = TextAlign.Center,
+      fontSize = 26.sp,
+      color = Brand900)
 }
 
 @Composable
 @Preview
 fun AppTitlePreview() {
-    UlaScanTheme {
-        AppTitle()
-    }
+  UlaScanTheme { AppTitle() }
 }

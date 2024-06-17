@@ -3,7 +3,6 @@ package com.ulascan.app.ui.screens.auth
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,39 +29,36 @@ fun FormInput(
     label: String,
     isPassword: Boolean = false
 ) {
-    Text(text = title)
-    Box(
-        modifier = Modifier
-            .shadow(elevation = 8.dp, shape = RoundedCornerShape(36.dp))
-            .clip(RoundedCornerShape(30.dp))
-            .background(Weak100)
-    ) {
+  Text(text = title)
+  Box(
+      modifier =
+          Modifier.shadow(elevation = 8.dp, shape = RoundedCornerShape(36.dp))
+              .clip(RoundedCornerShape(30.dp))
+              .background(Weak100)) {
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             label = {
-                if (value.isNotBlank()) {
-                    Text(text = "")
-                } else {
-                    Text(text = label)
-                }
+              if (value.isNotBlank()) {
+                Text(text = "")
+              } else {
+                Text(text = label)
+              }
             },
             shape = RoundedCornerShape(30.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(y = (-4).dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent,
-                focusedTextColor = Color.Black,
-                focusedLabelColor = Color.Transparent,
-                unfocusedSupportingTextColor = Color.Transparent
-            ),
-            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text,
-                imeAction = if (isPassword) ImeAction.Done else ImeAction.Next
-            )
-        )
-    }
+            modifier = Modifier.fillMaxWidth().offset(y = (-4).dp),
+            colors =
+                OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedBorderColor = Color.Transparent,
+                    focusedTextColor = Color.Black,
+                    focusedLabelColor = Color.Transparent,
+                    unfocusedSupportingTextColor = Color.Transparent),
+            visualTransformation =
+                if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text,
+                    imeAction = if (isPassword) ImeAction.Done else ImeAction.Next))
+      }
 }

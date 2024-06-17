@@ -1,5 +1,6 @@
 package com.ulascan.app.ui.screens.auth.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +32,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,131 +50,121 @@ import com.ulascan.app.ui.screens.auth.register.LoginViewModel
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
-
+import com.ulascan.app.utils.toCapitalize
+import io.github.muddz.styleabletoast.StyleableToast
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel(), navController: NavController = rememberNavController()
+    viewModel: LoginViewModel = viewModel(),
+    navController: NavController = rememberNavController()
 ) {
-    var password by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    val uiState by viewModel.uiState.collectAsState()
+  var password by remember { mutableStateOf("") }
+  var email by remember { mutableStateOf("") }
+  val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(uiState) {
-        if (uiState is LoginUiState.Success) {
-            email = ""
-            password = ""
-            navController.navigate(NavigationItem.Chat.route) {
-                popUpTo(NavigationItem.Chat.route) { inclusive = true }
-            }
-        }
+  val context = LocalContext.current
+
+  LaunchedEffect(uiState) {
+    if (uiState is LoginUiState.Success) {
+      email = ""
+      password = ""
+      navController.navigate(NavigationItem.Chat.route) {
+        popUpTo(NavigationItem.Chat.route) { inclusive = true }
+      }
+    } else if (uiState is LoginUiState.Error) {
+      StyleableToast.makeText(
+              context,
+              (uiState as LoginUiState.Error).message.toCapitalize(),
+              Toast.LENGTH_SHORT,
+              R.style.toastError)
+          .show()
     }
+  }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.65f)
+  Box(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier =
+            Modifier.fillMaxHeight(0.65f)
                 .fillMaxWidth()
                 .background(Brand900)
-                .align(Alignment.TopCenter)
-        ) {
-        }
+                .align(Alignment.TopCenter)) {}
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_ulascan),
-                contentDescription = "Ulascan Logo",
-                modifier = Modifier
-                    .size(120.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+          Image(
+              painter = painterResource(id = R.drawable.logo_ulascan),
+              contentDescription = stringResource(id = R.string.app_name),
+              modifier = Modifier.size(120.dp))
+          Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = "Masuk Ke Akunmu!",
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = Color.White,
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Masukkan email dan kata sandi untuk\n masuk ke akunmu",
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-            )
-            Spacer(modifier = Modifier.height(24.dp))
+          Text(
+              text = stringResource(id = R.string.login_text),
+              style =
+                  MaterialTheme.typography.titleLarge.copy(
+                      color = Color.White,
+                  ))
+          Spacer(modifier = Modifier.height(8.dp))
+          Text(
+              text = stringResource(id = R.string.login_guides),
+              style =
+                  MaterialTheme.typography.labelMedium.copy(
+                      color = Color.White, textAlign = TextAlign.Center))
+          Spacer(modifier = Modifier.height(24.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.85f)
-                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp))
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Weak100)
-            ) {
+          Box(
+              modifier =
+                  Modifier.fillMaxWidth(0.85f)
+                      .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp))
+                      .clip(RoundedCornerShape(16.dp))
+                      .background(Weak100)) {
                 Column(
-                    modifier = Modifier
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                    modifier = Modifier.padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                      FormInput(
+                          title = stringResource(id = R.string.email),
+                          value = email,
+                          onValueChange = { email = it },
+                          label = stringResource(id = R.string.email_guides))
 
+                      FormInput(
+                          title = stringResource(id = R.string.password),
+                          value = password,
+                          onValueChange = { password = it },
+                          label = stringResource(id = R.string.password_guides),
+                          isPassword = true)
 
-                    FormInput(
-                        title = "Email",
-                        value = email,
-                        onValueChange = { email = it },
-                        label = "Masukkan Email Anda"
-                    )
+                      Spacer(modifier = Modifier.height(8.dp))
 
-                    FormInput(
-                        title = "Kata Sandi",
-                        value = password,
-                        onValueChange = { password = it },
-                        label = "Masukkan Kata Sandi Anda",
-                        isPassword = true
-                    )
+                      Button(
+                          onClick = { viewModel.loginUser(email, password) },
+                          modifier = Modifier.fillMaxWidth().height(48.dp),
+                          colors = ButtonDefaults.buttonColors(containerColor = Brand900),
+                      ) {
+                        Text(text = stringResource(id = R.string.enter))
+                      }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(onClick = {
-                        viewModel.loginUser(email, password)
-                    },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Brand900),
-                            ) {
-                        Text(text = "Masuk")
+                      Row(
+                          modifier = Modifier.fillMaxWidth(),
+                          horizontalArrangement = Arrangement.Center) {
+                            Text(text = stringResource(id = R.string.sign_in_message))
+                            Text(
+                                text = stringResource(id = R.string.register_hint),
+                                fontWeight = FontWeight.Bold,
+                                modifier =
+                                    Modifier.clickable {
+                                      navController.navigate(NavigationItem.Register.route)
+                                    })
+                          }
                     }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = "Belum Memiliki akun ? ")
-                        Text(text = "Daftar", fontWeight = FontWeight.Bold, modifier = Modifier.clickable { navController.navigate(NavigationItem.Register.route)})
-                    }
-
-                }
-            }
+              }
         }
-    }
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    UlaScanTheme {
-        LoginScreen()
-    }
+  UlaScanTheme { LoginScreen() }
 }
-

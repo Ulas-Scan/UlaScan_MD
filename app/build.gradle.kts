@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.serialization)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -57,18 +59,22 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
     implementation(libs.androidxDatastorePreferences)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    
     implementation(libs.retrofit)
     implementation(libs.retrofitGson)
     implementation(libs.loggingInterceptor)
     implementation(libs.iconsax)
-    implementation(libs.androidx.constraintlayout)
+    implementation(libs.jetpackLoading)
     implementation(libs.lifecycleViewModelKtx)
     implementation(libs.lifecycleLiveDataKtx)
     implementation(libs.coroutinesCore)
@@ -77,6 +83,10 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(libs.compose.runtime)
     implementation(libs.compose.material3)
+    implementation(libs.kotlinSerialization)
+    implementation(libs.coilCompose)
+    implementation(libs.styleableToast)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

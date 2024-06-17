@@ -6,10 +6,49 @@
     <string name="chat_placeholder"> Masukkan link produk disini </string>
     <string name="search">Masukkan kata kunci</string>
     <string name="username">Anda</string>
+    <string name="product_review">Ulasan Produk</string>
+    <string name="sentiment_analysis">Analisis Sentimen</string>
+    <string name="analysis_summary">Ringkasan Analisis</string>
+    <string name="login_text">Masuk Ke Akunmu!</string>
+    <string name="login_guides">Masukkan email dan kata sandi untuk\nmasuk ke akunmu</string>
+    <string name="email">Email</string>
+    <string name="email_guides">Masukkan Email Anda</string>
+    <string name="password">Kata Sandi</string>
+    <string name="password_guides">Masukkan Kata Sandi Anda</string>
+    <string name="name">Name</string>
+    <string name="name_guides">Enter your Full Name</string>
+    <string name="enter">Masuk</string>
+    <string name="sign_in_message">Belum Memiliki akun?&#160;</string>
+    <string name="sign_up_message">Sudah Memiliki akun?&#160;</string>
+    <string name="login_hint"> Masuk </string>
+    <string name="register_hint">Daftar</string>
+    <string name="register_text">Daftarkan Dirimu!</string>
+    <string name="register_guides">Masukkan datamu untuk mendaftar\npada aplikasi ini! </string>
+    <string name="find_your_best_product"> Analisis Ulasan Otomatis </string>
+    <string name="initial_description"> Temukan sentimen pelanggan tersembunyi untuk memudahkan keputusan pembelian Anda. </string>
+    <string name="get_started"> Mulai Sekarang </string>
+    <string name="positive_review_key">Positive Review</string>
+    <string name="negative_review_key">Negative Review</string>
+    <string name="product_condition">Kondisi Produk</string>
+    <string name="negative_key">Negative</string>
+    <string name="positive_key">Positive</string>
+    <string name="packaging_satisfaction">%1$s%% pembeli puas mengenai keamanan kemasan.</string>
+    <string name="delivery_satisfaction">%1$s%% pembeli merasa pengiriman barang ini sangat cepat.</string>
+    <string name="admin_response">%1$s%% pembeli merasa adminnya fast respon dan sopan.</string>
+    <string name="product_condition_message">%1$s%% mengatakan barang tidak cacat sama sekali dan berfungsi dengan baik.</string>
+    <string name="rating">Rating</string>
+    <string name="star">Bintang</string>
+    <string name="review">Ulasan</string>
+    <string name="packaging">Kemasan</string>
+    <string name="delivery">Pengiriman</string>
+    <string name="admin_response_text">Respon Admin</string>
+    <string name="sign_in_or_create_an_account">Masuk atau buat akun</string>
+    <string name="auth_description"> Membuka fitur riwayat analisis. </string>
+    <string name="retry"> Coba Lagi </string>
 
     <string-array name="guides">
-        <item>Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.</item>
-        <item>Maecenas sed lectus a libero pellentesque fermentum. Sed vitae elit quis felis aliquet varius sed vel odio.</item>
-        <item>Praesent lobortis blandit bibendum. Etiam ligula urna, imperdiet in lacus in.</item>
+        <item>Tempelkan link produk yang akan Anda beli ke dalam textbox dibawah.</item>
+        <item>Aplikasi kami akan memproses tautan yang Anda berikan.</item>
+        <item>Dapatkan analisis akurat produk yang akan Anda beli!</item>
     </string-array>
 </resources>
