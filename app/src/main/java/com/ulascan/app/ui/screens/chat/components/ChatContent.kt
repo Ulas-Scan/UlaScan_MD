@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -73,11 +75,15 @@ import io.eyram.iconsax.IconSax
 fun Header(
     modifier: Modifier = Modifier,
     drawerState: DrawerState,
+    isLoggedIn: Boolean = false,
+    onLogoutClickListener: () -> Unit,
     onDrawerClick: (DrawerState) -> Unit
 ) {
-    Box(
-        contentAlignment = Alignment.CenterStart,
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
+            .fillMaxWidth()
     ) {
         Image(
             painter = painterResource(id = R.drawable.nav_middle),
@@ -88,7 +94,18 @@ fun Header(
         )
         AppTitle(
             modifier = Modifier
-                .fillMaxWidth()
+        )
+        Icon(
+            painter = painterResource(IconSax.Bold.Logout1),
+            contentDescription = "Logout",
+            modifier = Modifier
+                .size(20.dp)
+                .wrapContentWidth(align = Alignment.End)
+                .clickable (isLoggedIn) {
+                    onLogoutClickListener()
+                }
+                .alpha(if (isLoggedIn) 1f else 0f),
+            tint = Error600,
         )
     }
 }
@@ -331,10 +348,12 @@ fun ChatContent(
     onDrawerClick: (DrawerState) -> Unit,
     uiState: ResultState<Nothing>,
     chat: Chat,
+    isLoggedIn: Boolean,
     onFetchHistory: () -> Unit,
     onSendChatClickListener: (Chat.Message) -> Unit,
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit,
-    onCancelChatClickListener: () -> Unit
+    onCancelChatClickListener: () -> Unit,
+    onLogoutClickListener: () -> Unit
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -344,7 +363,9 @@ fun ChatContent(
         
         Header(
             drawerState = drawerState,
+            isLoggedIn = isLoggedIn,
             onDrawerClick = onDrawerClick,
+            onLogoutClickListener = onLogoutClickListener,
             modifier = Modifier
                 .constrainAs(header) {
                     top.linkTo(parent.top, margin = 32.dp)
@@ -404,10 +425,12 @@ fun ChatContentPreview() {
             chat = Chat(
                 messages = emptyList(),
             ),
+            isLoggedIn = true,
             onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
             onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
+            onLogoutClickListener = { Log.d("ChatScreen", "Logout") }
         )
     }
 }
@@ -452,10 +475,12 @@ fun ChatContentWithMessagePreview() {
             chat = Chat(
                 messages = messages,
             ),
+            isLoggedIn = true,
             onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
             onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
             onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
+            onLogoutClickListener = { Log.d("ChatScreen", "Logout") }
         )
     }
 }

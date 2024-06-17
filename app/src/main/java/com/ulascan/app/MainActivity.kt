@@ -195,6 +195,10 @@ class MainActivity : ComponentActivity() {
                           Unit
                       }
                     },
+                    onLogoutClickListener = {
+                        authViewModel.logout()
+                        navController.navigate(NavigationItem.Login.route)
+                    },
                     onSendChatClickListener = { message -> chatViewModel.sendMessage(message) },
                     onCancelChatClickListener = { chatViewModel.cancelRequest() },
                     onAnalyzeRouteNavigation = { 

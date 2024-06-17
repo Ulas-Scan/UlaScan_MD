@@ -21,6 +21,10 @@ class UserRepository(private val userPreferences: UserPreferences, private val a
         return userPreferences.getUserSession()
     }
     
+    suspend fun logout() {
+        userPreferences.clearToken()
+    }
+    
     suspend fun getUserInformation(token: String): ResultState<UserResponse> {
         return try {
             val response = apiService.getUserInformation("Bearer $token")

@@ -43,4 +43,11 @@ class AuthViewModel(
             uiState.emit(state)
         }
     }
+    
+    fun logout() {
+        viewModelScope.launch { 
+            repository.logout()
+            _user.value = UserModel("", false)
+        }
+    }
 }

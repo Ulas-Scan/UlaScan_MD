@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.ulascan.app.NavigationItem
 import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.data.remote.response.Chat
 import com.ulascan.app.data.remote.response.HistoriesItem
@@ -51,7 +50,8 @@ fun ChatScreen(
     onAnalyzeRouteNavigation: (AnalysisData) -> Unit,
     onLoginDrawerNavigation: () -> Unit,
     onRegisterDrawerNavigation: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLogoutClickListener: () -> Unit
 ) {
     var drawerState by remember { mutableStateOf(DrawerState.Closed) }
     
@@ -72,7 +72,6 @@ fun ChatScreen(
             .background(Weak100)
             .fillMaxSize(),
     ) {
-        if (drawerState.isOpened()) {
             Drawer(
                 authState = authState,
                 historyState = historyState,
@@ -83,17 +82,19 @@ fun ChatScreen(
                 onRegisterDrawerNavigation = onRegisterDrawerNavigation,
                 modifier = Modifier
                     .background(if (drawerState.isOpened()) Color.White else MaterialTheme.colorScheme.background)
+                    .offset(x = if(drawerState.isOpened()) 0.dp else -screenWidth.value.dp)
             )
-        }
         ChatContent(
             drawerState = drawerState,
             onDrawerClick = { drawerState = it },
             uiState = uiState,
             chat = chat,
+            isLoggedIn = isLoggedIn,
             onFetchHistory = onFetchHistory,
             onSendChatClickListener = onSendChatClickListener,
             onCancelChatClickListener = onCancelChatClickListener,
             onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
+            onLogoutClickListener = onLogoutClickListener,
             modifier = Modifier
                 .offset(x = animatedOffset)
         )
@@ -113,12 +114,13 @@ fun ChatScreenPreview() {
             historyState = ResultState.Default,
             chat = chat,
             history = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems(),
-            onFetchHistory = { Log.d("ChatScreen", "Fetch history") }, 
-            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, 
-            onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },  
+            onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
+            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
+            onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
             onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
-            onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") }
+            onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },
+            onLogoutClickListener = { Log.d("ChatScreen", "Logout") }
         )
     }
 }
@@ -148,11 +150,12 @@ fun ChatScreenWithMessagePreview() {
             chat = chat,
             history = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems(),
             onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
-            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") }, 
-            onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },  
+            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
+            onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
             onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
             onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
-            onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") }
+            onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },
+            onLogoutClickListener = { Log.d("ChatScreen", "Logout") }
         )
     }
 }
