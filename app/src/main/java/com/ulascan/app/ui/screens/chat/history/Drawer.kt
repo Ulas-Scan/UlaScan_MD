@@ -29,10 +29,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,6 +69,7 @@ import com.ulascan.app.utils.ErrorMessage
 import com.ulascan.app.utils.Helper
 import com.ulascan.app.utils.LoadingNextPageItem
 import io.eyram.iconsax.IconSax
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -102,6 +105,17 @@ fun Drawer(
     var keywords by remember { mutableStateOf(TextFieldValue()) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val categorizedQueries = remember { mutableStateOf(emptyMap<String, List<HistoriesItem>>()) }
+    
+    LaunchedEffect(history) {
+        snapshotFlow { history.loadState }.collectLatest { loadState ->
+            if (loadState.refresh is LoadState.NotLoading) {
+                val queries = history.itemSnapshotList.items
+                categorizedQueries.value = Helper.categorizeQueries(queries)
+            }
+        }
+    }
+    
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -187,28 +201,41 @@ fun Drawer(
                             .padding(horizontal = 24.dp)
                             .fillMaxWidth()
                     ) {
-                        items(history.itemCount) { index ->
-                            history[index]?.let {
+                        categorizedQueries.value.forEach { (category, queries) ->
+                            if (queries.isEmpty()) return@forEach
+                            item {
                                 Text(
-                                    text = it.productName,
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = Neutral900,
-                                    fontWeight = FontWeight.Bold,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
+                                    text = category,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Keyboard,
+                                    fontWeight = FontWeight.Normal,
                                     modifier = Modifier
                                         .padding(12.dp)
-                                        .clickable {
-                                            val analysisData = history[index]?.let { it1 ->
-                                                Helper.convertHistoryDataToAnalysisData(
-                                                    it1
-                                                )
-                                            }
-                                            if (analysisData != null) {
-                                                onAnalyzeRouteNavigation(analysisData)
-                                            }
-                                        },
                                 )
+                            }
+                            items(queries.size) { index ->
+                                history[index]?.let {
+                                    Text(
+                                        text = it.productName,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = Neutral900,
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier
+                                            .padding(12.dp)
+                                            .clickable {
+                                                val analysisData = history[index]?.let { item ->
+                                                    Helper.convertHistoryDataToAnalysisData(
+                                                        item
+                                                    )
+                                                }
+                                                if (analysisData != null) {
+                                                    onAnalyzeRouteNavigation(analysisData)
+                                                }
+                                            },
+                                    )
+                                }
                             }
                         }
                         history.apply { 

@@ -1,6 +1,14 @@
 package com.ulascan.app.data.remote.response
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.gson.annotations.SerializedName
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 data class HistoriesResponse(
 
@@ -87,4 +95,22 @@ data class HistoriesItem(
 
 	@field:SerializedName("id")
 	val id: String,
-)
+) {
+	val instant: Date
+		get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			parseInstantApi26(updatedAt)
+		} else {
+			parseInstantLegacy(updatedAt)
+		}
+
+	@RequiresApi(Build.VERSION_CODES.O)
+	private fun parseInstantApi26(timestamp: String): Date {
+		return Date.from(Instant.parse(timestamp).atZone(ZoneId.of("Asia/Jakarta")).toInstant())
+	}
+
+	private fun parseInstantLegacy(timestamp: String): Date {
+		return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
+			timeZone = TimeZone.getTimeZone("Asia/Jakarta")
+		}.parse(timestamp)!!
+	}
+}

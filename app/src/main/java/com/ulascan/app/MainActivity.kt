@@ -147,6 +147,7 @@ class MainActivity : ComponentActivity() {
                 route = NavigationItem.Chat.route,
             ) {
                 val isLoggedIn = user.isLoggedIn
+                val token = user.token
                 
                 if (isLoggedIn) {
                     LaunchedEffect(Unit) {
@@ -158,7 +159,7 @@ class MainActivity : ComponentActivity() {
                     ChatViewModelFactory.getInstance(
                         LocalContext.current, 
                         isLoggedIn = isLoggedIn,
-                        token = user.token
+                        token = token
                     )
                 )
 

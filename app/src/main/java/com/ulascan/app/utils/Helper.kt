@@ -1,7 +1,16 @@
 package com.ulascan.app.utils
 
+import android.os.Build
+import android.text.format.DateUtils
+import androidx.annotation.RequiresApi
 import com.ulascan.app.data.remote.response.AnalysisData
 import com.ulascan.app.data.remote.response.HistoriesItem
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
+import java.util.Calendar
+import java.util.TimeZone
 
 object Helper {
     fun generateAnalysisData(): AnalysisData {
@@ -71,6 +80,26 @@ object Helper {
             productDescription = generateAnalysisData().productDescription,
             imageUrls = generateAnalysisData().imageUrls,
             shopAvatar = generateAnalysisData().shopAvatar
+        )
+    }
+
+    fun categorizeQueries(queries: List<HistoriesItem>): Map<String, List<HistoriesItem>> {
+        val today = mutableListOf<HistoriesItem>()
+        val yesterday = mutableListOf<HistoriesItem>()
+        val previously = mutableListOf<HistoriesItem>()
+        
+        queries.forEach { query ->
+            when {
+                DateUtils.isToday(query.instant.time) -> today.add(query)
+                DateUtils.isToday(query.instant.time + DateUtils.DAY_IN_MILLIS)  -> yesterday.add(query)
+                else -> previously.add(query)
+            }
+        }
+        
+        return mapOf(
+            "Today" to today,
+            "Yesterday" to yesterday,
+            "Previously" to previously
         )
     }
 }
