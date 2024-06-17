@@ -12,32 +12,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class AuthenticatedChatViewModel(
-    private val chatRepository: ChatRepository
-): ChatViewModel(chatRepository) {
-    private val _history = MutableStateFlow<PagingData<HistoriesItem>>(PagingData.empty())
-    
-    val history
-        get() = _history
-    
-    private val _historyState = MutableStateFlow<ResultState<Nothing>>(ResultState.Default)
-    val historyState
-        get() = _historyState
-    
-    init {
-        getHistory()
+class AuthenticatedChatViewModel(private val chatRepository: ChatRepository) :
+    ChatViewModel(chatRepository) {
+  private val _history = MutableStateFlow<PagingData<HistoriesItem>>(PagingData.empty())
+
+  val history
+    get() = _history
+
+  private val _historyState = MutableStateFlow<ResultState<Nothing>>(ResultState.Default)
+  val historyState
+    get() = _historyState
+
+  init {
+    getHistory()
+  }
+
+  fun getHistory(keywords: String = "") {
+    viewModelScope.launch {
+      if (chatRepository is AuthenticatedChatRepository) {
+        chatRepository
+            .getHistoryWithPaging(keywords = keywords)
+            .distinctUntilChanged()
+            .cachedIn(viewModelScope)
+            .collect { histories -> _history.emit(histories) }
+      }
     }
-    
-    fun getHistory(keywords: String = "") {
-        viewModelScope.launch {
-            if (chatRepository is AuthenticatedChatRepository) {
-                chatRepository.getHistoryWithPaging(keywords = keywords)
-                    .distinctUntilChanged()
-                    .cachedIn(viewModelScope)
-                    .collect {histories ->
-                        _history.emit(histories)
-                    }
-            }
-        }
-    }
+  }
 }

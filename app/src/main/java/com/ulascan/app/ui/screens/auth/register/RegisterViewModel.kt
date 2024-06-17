@@ -13,26 +13,26 @@ import retrofit2.HttpException
 
 class RegisterViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow<RegisterUiState>(RegisterUiState.Empty)
-    val uiState: StateFlow<RegisterUiState> = _uiState
+  private val _uiState = MutableStateFlow<RegisterUiState>(RegisterUiState.Empty)
+  val uiState: StateFlow<RegisterUiState> = _uiState
 
-    fun registerUser(name: String, email: String, password: String) {
-        viewModelScope.launch {
-            try {
-                _uiState.value = RegisterUiState.Loading
+  fun registerUser(name: String, email: String, password: String) {
+    viewModelScope.launch {
+      try {
+        _uiState.value = RegisterUiState.Loading
 
-                val response = ApiConfig.getApiService("").register(RegisterRequest(name, email, password))
+        val response = ApiConfig.getApiService("").register(RegisterRequest(name, email, password))
 
-                if (response.status == true) {
-                    _uiState.value = RegisterUiState.Success
-                } else {
-                    _uiState.value = RegisterUiState.Error("Registration failed")
-                }
-            } catch (e: HttpException) {
-                _uiState.value = RegisterUiState.Error(e.getErrorMessage())
-            } catch (e: Exception) {
-                _uiState.value = RegisterUiState.Error(e.message ?: "Unknown error")
-            }
+        if (response.status == true) {
+          _uiState.value = RegisterUiState.Success
+        } else {
+          _uiState.value = RegisterUiState.Error("Registration failed")
         }
+      } catch (e: HttpException) {
+        _uiState.value = RegisterUiState.Error(e.getErrorMessage())
+      } catch (e: Exception) {
+        _uiState.value = RegisterUiState.Error(e.message ?: "Unknown error")
+      }
     }
+  }
 }

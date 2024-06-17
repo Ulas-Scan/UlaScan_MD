@@ -53,142 +53,129 @@ import io.github.muddz.styleabletoast.StyleableToast
 
 @Composable
 fun RegisterScreen(
-    viewModel: RegisterViewModel = viewModel(), navController: NavController = rememberNavController()) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    viewModel: RegisterViewModel = viewModel(),
+    navController: NavController = rememberNavController()
+) {
+  var name by remember { mutableStateOf("") }
+  var email by remember { mutableStateOf("") }
+  var password by remember { mutableStateOf("") }
 
-    val context = LocalContext.current
-    val uiState by viewModel.uiState.collectAsState()
-    LaunchedEffect(uiState) {
-        if (uiState is RegisterUiState.Success) {
-            name = ""
-            email = ""
-            password = ""
-            navController.navigate(NavigationItem.Login.route) {
-                popUpTo(NavigationItem.Register.route) { inclusive = true }
-            }
-        } else if (uiState is RegisterUiState.Error) {
-            val message = (uiState as RegisterUiState.Error).message
-            StyleableToast.makeText(
-                context,
-                message,
-                Toast.LENGTH_SHORT,
-                R.style.toastError
-            ).show()
-        }
+  val context = LocalContext.current
+  val uiState by viewModel.uiState.collectAsState()
+  LaunchedEffect(uiState) {
+    if (uiState is RegisterUiState.Success) {
+      name = ""
+      email = ""
+      password = ""
+      navController.navigate(NavigationItem.Login.route) {
+        popUpTo(NavigationItem.Register.route) { inclusive = true }
+      }
+    } else if (uiState is RegisterUiState.Error) {
+      val message = (uiState as RegisterUiState.Error).message
+      StyleableToast.makeText(context, message, Toast.LENGTH_SHORT, R.style.toastError).show()
     }
+  }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.65f)
+  Box(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier =
+            Modifier.fillMaxHeight(0.65f)
                 .fillMaxWidth()
                 .background(Brand900)
-                .align(Alignment.TopCenter)
-        ) {
-        }
+                .align(Alignment.TopCenter)) {}
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_ulascan),
-                contentDescription = stringResource(id = R.string.app_name),
-                modifier = Modifier.size(120.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+          Image(
+              painter = painterResource(id = R.drawable.logo_ulascan),
+              contentDescription = stringResource(id = R.string.app_name),
+              modifier = Modifier.size(120.dp))
+          Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = stringResource(id = R.string.register_text),
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = Color.White,
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(id = R.string.register_guides),
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-            )
+          Text(
+              text = stringResource(id = R.string.register_text),
+              style =
+                  MaterialTheme.typography.titleLarge.copy(
+                      color = Color.White,
+                  ))
+          Spacer(modifier = Modifier.height(8.dp))
+          Text(
+              text = stringResource(id = R.string.register_guides),
+              style =
+                  MaterialTheme.typography.labelMedium.copy(
+                      color = Color.White, textAlign = TextAlign.Center))
 
-            Spacer(modifier = Modifier.height(16.dp))
+          Spacer(modifier = Modifier.height(16.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp))
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Weak100)
-            ) {
+          Box(
+              modifier =
+                  Modifier.fillMaxWidth(0.9f)
+                      .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp))
+                      .clip(RoundedCornerShape(16.dp))
+                      .background(Weak100)) {
                 Column(
                     modifier = Modifier.padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                    verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                      FormInput(
+                          title = stringResource(id = R.string.name),
+                          value = name,
+                          onValueChange = { name = it },
+                          label = stringResource(id = R.string.name_guides),
+                      )
 
-                    FormInput(
-                        title = stringResource(id = R.string.name),
-                        value = name,
-                        onValueChange = { name = it },
-                        label = stringResource(id = R.string.name_guides),
-                    )
+                      FormInput(
+                          title = stringResource(id = R.string.email),
+                          value = email,
+                          onValueChange = { email = it },
+                          label = stringResource(id = R.string.email_guides),
+                      )
 
-                    FormInput(
-                        title = stringResource(id = R.string.email),
-                        value = email,
-                        onValueChange = { email = it },
-                        label = stringResource(id = R.string.email_guides),
-                    )
+                      FormInput(
+                          title = stringResource(id = R.string.password),
+                          value = password,
+                          onValueChange = { password = it },
+                          label = stringResource(id = R.string.password_guides),
+                          isPassword = true)
 
+                      Spacer(modifier = Modifier.height(8.dp))
 
-                    FormInput(
-                        title = stringResource(id = R.string.password),
-                        value = password,
-                        onValueChange = { password = it },
-                        label = stringResource(id = R.string.password_guides),
-                        isPassword = true
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(onClick = {
-                        viewModel.registerUser(name, email, password)
-                        name = ""
-                        email = ""
-                        password = ""
-                    },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Brand900),
-                    ) {
+                      Button(
+                          onClick = {
+                            viewModel.registerUser(name, email, password)
+                            name = ""
+                            email = ""
+                            password = ""
+                          },
+                          modifier = Modifier.fillMaxWidth().height(48.dp),
+                          colors = ButtonDefaults.buttonColors(containerColor = Brand900),
+                      ) {
                         Text(text = stringResource(id = R.string.register_hint))
-                    }
+                      }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = stringResource(id = R.string.sign_up_message))
-                        Text(text = stringResource(id = R.string.enter), fontWeight = FontWeight.Bold,
-                            modifier = Modifier.clickable { navController.navigate(NavigationItem.Login.route)})
+                      Row(
+                          modifier = Modifier.fillMaxWidth(),
+                          horizontalArrangement = Arrangement.Center) {
+                            Text(text = stringResource(id = R.string.sign_up_message))
+                            Text(
+                                text = stringResource(id = R.string.enter),
+                                fontWeight = FontWeight.Bold,
+                                modifier =
+                                    Modifier.clickable {
+                                      navController.navigate(NavigationItem.Login.route)
+                                    })
+                          }
                     }
-                }
-            }
+              }
         }
-    }
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun RegisterPreview() {
-    UlaScanTheme {
-        RegisterScreen(viewModel = RegisterViewModel(), navController = rememberNavController())
-    }
+  UlaScanTheme {
+    RegisterScreen(viewModel = RegisterViewModel(), navController = rememberNavController())
+  }
 }

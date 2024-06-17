@@ -33,8 +33,8 @@ import com.ulascan.app.ui.screens.chat.history.DrawerState
 import com.ulascan.app.ui.screens.chat.history.isOpened
 import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.ui.theme.Weak100
-import kotlinx.coroutines.flow.flowOf
 import kotlin.math.roundToInt
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun ChatScreen(
@@ -53,110 +53,98 @@ fun ChatScreen(
     modifier: Modifier = Modifier,
     onLogoutClickListener: () -> Unit
 ) {
-    var drawerState by remember { mutableStateOf(DrawerState.Closed) }
-    
-    val configuration = LocalConfiguration.current
-    val density = LocalDensity.current.density
+  var drawerState by remember { mutableStateOf(DrawerState.Closed) }
 
-    val screenWidth = remember {
-        derivedStateOf { (configuration.screenWidthDp * density).roundToInt() }
-    }
-    val offsetValue by remember { derivedStateOf { (screenWidth.value / 3.6).dp } }
-    val animatedOffset by animateDpAsState(
-        targetValue = if (drawerState.isOpened()) offsetValue else 0.dp,
-        label = "Animated Offset"
-    )
-    
-    Box(
-        modifier = modifier
-            .background(Weak100)
-            .fillMaxSize(),
-    ) {
-            Drawer(
-                authState = authState,
-                historyState = historyState,
-                history = history,
-                isLoggedIn = isLoggedIn,
-                onFetchHistory = onFetchHistory,
-                onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
-                onLoginDrawerNavigation = onLoginDrawerNavigation,
-                onRegisterDrawerNavigation = onRegisterDrawerNavigation,
-                modifier = Modifier
-                    .background(if (drawerState.isOpened()) Color.White else MaterialTheme.colorScheme.background)
-                    .offset(x = if(drawerState.isOpened()) 0.dp else -screenWidth.value.dp)
-            )
-        ChatContent(
-            drawerState = drawerState,
-            onDrawerClick = { drawerState = it },
-            uiState = uiState,
-            chat = chat,
-            isLoggedIn = isLoggedIn,
-            onFetchHistory = onFetchHistory,
-            onSendChatClickListener = onSendChatClickListener,
-            onCancelChatClickListener = onCancelChatClickListener,
-            onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
-            onLogoutClickListener = onLogoutClickListener,
-            modifier = Modifier
-                .offset(x = animatedOffset)
-        )
-    }
+  val configuration = LocalConfiguration.current
+  val density = LocalDensity.current.density
+
+  val screenWidth = remember {
+    derivedStateOf { (configuration.screenWidthDp * density).roundToInt() }
+  }
+  val offsetValue by remember { derivedStateOf { (screenWidth.value / 3.6).dp } }
+  val animatedOffset by
+      animateDpAsState(
+          targetValue = if (drawerState.isOpened()) offsetValue else 0.dp,
+          label = "Animated Offset")
+
+  Box(
+      modifier = modifier.background(Weak100).fillMaxSize(),
+  ) {
+    Drawer(
+        authState = authState,
+        historyState = historyState,
+        history = history,
+        isLoggedIn = isLoggedIn,
+        onFetchHistory = onFetchHistory,
+        onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
+        onLoginDrawerNavigation = onLoginDrawerNavigation,
+        onRegisterDrawerNavigation = onRegisterDrawerNavigation,
+        modifier =
+            Modifier.background(
+                    if (drawerState.isOpened()) Color.White
+                    else MaterialTheme.colorScheme.background)
+                .offset(x = if (drawerState.isOpened()) 0.dp else -screenWidth.value.dp))
+    ChatContent(
+        drawerState = drawerState,
+        onDrawerClick = { drawerState = it },
+        uiState = uiState,
+        chat = chat,
+        isLoggedIn = isLoggedIn,
+        onFetchHistory = onFetchHistory,
+        onSendChatClickListener = onSendChatClickListener,
+        onCancelChatClickListener = onCancelChatClickListener,
+        onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
+        onLogoutClickListener = onLogoutClickListener,
+        modifier = Modifier.offset(x = animatedOffset))
+  }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun ChatScreenPreview() {
-    UlaScanTheme {
-        val chat = Chat(
-            messages = emptyList()
-        )
-        ChatScreen(
-            authState = ResultState.Default,
-            uiState = ResultState.Default,
-            historyState = ResultState.Default,
-            chat = chat,
-            history = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems(),
-            onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
-            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
-            onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
-            onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
-            onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
-            onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },
-            onLogoutClickListener = { Log.d("ChatScreen", "Logout") }
-        )
-    }
+  UlaScanTheme {
+    val chat = Chat(messages = emptyList())
+    ChatScreen(
+        authState = ResultState.Default,
+        uiState = ResultState.Default,
+        historyState = ResultState.Default,
+        chat = chat,
+        history = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems(),
+        onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
+        onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
+        onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
+        onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
+        onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
+        onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },
+        onLogoutClickListener = { Log.d("ChatScreen", "Logout") })
+  }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun ChatScreenWithMessagePreview() {
-    val num = 5  // Number of items to create
-    val messages = mutableListOf<Chat.Message>()
+  val num = 5 // Number of items to create
+  val messages = mutableListOf<Chat.Message>()
 
-    for (i in 1..num) {
-        val message = Chat.Message(
-            isResponse = i%2 == 0,
-            text = "Message number $i"
-        )
-        messages.add(message)
-    }
-    
-    UlaScanTheme {
-        val chat = Chat(
-            messages = messages
-        )
-        ChatScreen(
-            authState = ResultState.Default,
-            uiState = ResultState.Default,
-            historyState = ResultState.Default,
-            chat = chat,
-            history = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems(),
-            onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
-            onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
-            onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
-            onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
-            onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
-            onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },
-            onLogoutClickListener = { Log.d("ChatScreen", "Logout") }
-        )
-    }
+  for (i in 1..num) {
+    val message = Chat.Message(isResponse = i % 2 == 0, text = "Message number $i")
+    messages.add(message)
+  }
+
+  UlaScanTheme {
+    val chat = Chat(messages = messages)
+    ChatScreen(
+        authState = ResultState.Default,
+        uiState = ResultState.Default,
+        historyState = ResultState.Default,
+        chat = chat,
+        history = flowOf(PagingData.from(emptyList<HistoriesItem>())).collectAsLazyPagingItems(),
+        onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
+        onSendChatClickListener = { Log.d("ChatScreen", "Message sent") },
+        onCancelChatClickListener = { Log.d("ChatScreen", "Request cancelled") },
+        onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
+        onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
+        onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },
+        onLogoutClickListener = { Log.d("ChatScreen", "Logout") })
+  }
 }

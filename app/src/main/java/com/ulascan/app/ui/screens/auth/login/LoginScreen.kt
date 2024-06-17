@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -54,139 +53,118 @@ import com.ulascan.app.ui.theme.Weak100
 import com.ulascan.app.utils.toCapitalize
 import io.github.muddz.styleabletoast.StyleableToast
 
-
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel(), navController: NavController = rememberNavController()
+    viewModel: LoginViewModel = viewModel(),
+    navController: NavController = rememberNavController()
 ) {
-    var password by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    val uiState by viewModel.uiState.collectAsState()
+  var password by remember { mutableStateOf("") }
+  var email by remember { mutableStateOf("") }
+  val uiState by viewModel.uiState.collectAsState()
 
-    val context = LocalContext.current
-    
-    LaunchedEffect(uiState) {
-        if (uiState is LoginUiState.Success) {
-            email = ""
-            password = ""
-            navController.navigate(NavigationItem.Chat.route) {
-                popUpTo(NavigationItem.Chat.route) { inclusive = true }
-            }
-        } else if (uiState is LoginUiState.Error) {
-            StyleableToast.makeText(
-                context, 
-                (uiState as LoginUiState.Error).message.toCapitalize(), 
-                Toast.LENGTH_SHORT, 
-                R.style.toastError
-            ).show()
-        }
+  val context = LocalContext.current
+
+  LaunchedEffect(uiState) {
+    if (uiState is LoginUiState.Success) {
+      email = ""
+      password = ""
+      navController.navigate(NavigationItem.Chat.route) {
+        popUpTo(NavigationItem.Chat.route) { inclusive = true }
+      }
+    } else if (uiState is LoginUiState.Error) {
+      StyleableToast.makeText(
+              context,
+              (uiState as LoginUiState.Error).message.toCapitalize(),
+              Toast.LENGTH_SHORT,
+              R.style.toastError)
+          .show()
     }
+  }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.65f)
+  Box(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier =
+            Modifier.fillMaxHeight(0.65f)
                 .fillMaxWidth()
                 .background(Brand900)
-                .align(Alignment.TopCenter)
-        ) {
-        }
+                .align(Alignment.TopCenter)) {}
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_ulascan),
-                contentDescription = stringResource(id = R.string.app_name),
-                modifier = Modifier
-                    .size(120.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+          Image(
+              painter = painterResource(id = R.drawable.logo_ulascan),
+              contentDescription = stringResource(id = R.string.app_name),
+              modifier = Modifier.size(120.dp))
+          Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = stringResource(id = R.string.login_text),
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = Color.White,
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(id = R.string.login_guides),
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-            )
-            Spacer(modifier = Modifier.height(24.dp))
+          Text(
+              text = stringResource(id = R.string.login_text),
+              style =
+                  MaterialTheme.typography.titleLarge.copy(
+                      color = Color.White,
+                  ))
+          Spacer(modifier = Modifier.height(8.dp))
+          Text(
+              text = stringResource(id = R.string.login_guides),
+              style =
+                  MaterialTheme.typography.labelMedium.copy(
+                      color = Color.White, textAlign = TextAlign.Center))
+          Spacer(modifier = Modifier.height(24.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.85f)
-                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp))
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Weak100)
-            ) {
+          Box(
+              modifier =
+                  Modifier.fillMaxWidth(0.85f)
+                      .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp))
+                      .clip(RoundedCornerShape(16.dp))
+                      .background(Weak100)) {
                 Column(
-                    modifier = Modifier
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                    modifier = Modifier.padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                      FormInput(
+                          title = stringResource(id = R.string.email),
+                          value = email,
+                          onValueChange = { email = it },
+                          label = stringResource(id = R.string.email_guides))
 
+                      FormInput(
+                          title = stringResource(id = R.string.password),
+                          value = password,
+                          onValueChange = { password = it },
+                          label = stringResource(id = R.string.password_guides),
+                          isPassword = true)
 
-                    FormInput(
-                        title = stringResource(id = R.string.email),
-                        value = email,
-                        onValueChange = { email = it },
-                        label = stringResource(id = R.string.email_guides)
-                    )
+                      Spacer(modifier = Modifier.height(8.dp))
 
-                    FormInput(
-                        title = stringResource(id = R.string.password),
-                        value = password,
-                        onValueChange = { password = it },
-                        label = stringResource(id = R.string.password_guides),
-                        isPassword = true
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(onClick = {
-                        viewModel.loginUser(email, password)
-                    },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Brand900),
-                            ) {
+                      Button(
+                          onClick = { viewModel.loginUser(email, password) },
+                          modifier = Modifier.fillMaxWidth().height(48.dp),
+                          colors = ButtonDefaults.buttonColors(containerColor = Brand900),
+                      ) {
                         Text(text = stringResource(id = R.string.enter))
+                      }
+
+                      Row(
+                          modifier = Modifier.fillMaxWidth(),
+                          horizontalArrangement = Arrangement.Center) {
+                            Text(text = stringResource(id = R.string.sign_in_message))
+                            Text(
+                                text = stringResource(id = R.string.register_hint),
+                                fontWeight = FontWeight.Bold,
+                                modifier =
+                                    Modifier.clickable {
+                                      navController.navigate(NavigationItem.Register.route)
+                                    })
+                          }
                     }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = stringResource(id = R.string.sign_in_message))
-                        Text(text = stringResource(id = R.string.register_hint), fontWeight = FontWeight.Bold, modifier = Modifier.clickable { navController.navigate(NavigationItem.Register.route)})
-                    }
-
-                }
-            }
+              }
         }
-    }
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    UlaScanTheme {
-        LoginScreen()
-    }
+  UlaScanTheme { LoginScreen() }
 }
-

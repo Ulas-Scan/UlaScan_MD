@@ -8,11 +8,11 @@ import com.ulascan.app.data.states.ResultState
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
-    suspend fun getAnalysis(productUrl: String): ResultState<AnalysisResponse>
+  suspend fun getAnalysis(productUrl: String): ResultState<AnalysisResponse>
 }
 
-interface UserChatRepository: ChatRepository {
-    suspend fun getHistory(): ResultState<HistoriesResponse>
-    
-    suspend fun getHistoryWithPaging(keywords: String = ""): Flow<PagingData<HistoriesItem>>
+interface UserChatRepository : ChatRepository {
+  suspend fun getHistory(): ResultState<HistoriesResponse>
+
+  suspend fun getHistoryWithPaging(keywords: String = ""): Flow<PagingData<HistoriesItem>>
 }

@@ -24,66 +24,49 @@ import com.ulascan.app.ui.theme.Error600
 import com.ulascan.app.ui.theme.UlaScanTheme
 
 @Composable
-fun ErrorMessage(
-    message: String,
-    modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit
-) {
-    Row(
-        modifier = modifier.padding(10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        
+fun ErrorMessage(message: String, modifier: Modifier = Modifier, onClickRetry: () -> Unit) {
+  Row(
+      modifier = modifier.padding(10.dp),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Text(
+        text = message,
+        color = Error600,
+        modifier = Modifier.weight(1f),
+        maxLines = 2,
+        style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Bold)
+    OutlinedButton(
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+        border = BorderStroke(2.dp, Error600),
+        onClick = onClickRetry,
     ) {
-        Text(
-            text = message,
-            color = Error600,
-            modifier = Modifier.weight(1f),
-            maxLines = 2,
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold
-        )
-        OutlinedButton(
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent
-            ),
-            border = BorderStroke(2.dp, Error600),
-            onClick = onClickRetry,
-        ) {
-            Text(
-                text = stringResource(id = R.string.retry),
-                color = Error600,
-            )
-        }
+      Text(
+          text = stringResource(id = R.string.retry),
+          color = Error600,
+      )
     }
+  }
 }
-
 
 @Composable
 fun LoadingNextPageItem(modifier: Modifier) {
-    BallClipRotateProgressIndicator(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .wrapContentWidth(Alignment.CenterHorizontally)
-    )
+  BallClipRotateProgressIndicator(
+      modifier =
+          modifier.fillMaxWidth().padding(10.dp).wrapContentWidth(Alignment.CenterHorizontally))
 }
 
 @Composable
 @Preview
 fun ErrorMessagePreview() {
-    UlaScanTheme {
-        ErrorMessage(
-            message = "Failed to connect to /34.101.79.15.180",
-            onClickRetry = {}
-        )
-    }
+  UlaScanTheme {
+    ErrorMessage(message = "Failed to connect to /34.101.79.15.180", onClickRetry = {})
+  }
 }
 
 @Composable
 @Preview
 fun LoadingNextPageItemPreview() {
-    UlaScanTheme {
-        LoadingNextPageItem(modifier = Modifier)
-    }
+  UlaScanTheme { LoadingNextPageItem(modifier = Modifier) }
 }

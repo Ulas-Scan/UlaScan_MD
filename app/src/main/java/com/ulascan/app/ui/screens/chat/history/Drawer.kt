@@ -74,20 +74,14 @@ import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun BallPulseLoading() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        BallPulseProgressIndicator(
-            color = Brand900,
-            animationDuration = 800,
-            animationDelay = 200,
-            startDelay = 0,
-            ballCount = 4
-        )
-    }
+  Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+    BallPulseProgressIndicator(
+        color = Brand900,
+        animationDuration = 800,
+        animationDelay = 200,
+        startDelay = 0,
+        ballCount = 4)
+  }
 }
 
 @Composable
@@ -102,293 +96,253 @@ fun Drawer(
     onRegisterDrawerNavigation: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var keywords by remember { mutableStateOf(TextFieldValue()) }
-    val keyboardController = LocalSoftwareKeyboardController.current
+  var keywords by remember { mutableStateOf(TextFieldValue()) }
+  val keyboardController = LocalSoftwareKeyboardController.current
 
-    val categorizedQueries = remember { mutableStateOf(emptyMap<String, List<HistoriesItem>>()) }
-    
-    LaunchedEffect(history) {
-        snapshotFlow { history.loadState }.collectLatest { loadState ->
-            if (loadState.refresh is LoadState.NotLoading) {
-                val queries = history.itemSnapshotList.items
-                categorizedQueries.value = Helper.categorizeQueries(queries)
-            }
+  val categorizedQueries = remember { mutableStateOf(emptyMap<String, List<HistoriesItem>>()) }
+
+  LaunchedEffect(history) {
+    snapshotFlow { history.loadState }
+        .collectLatest { loadState ->
+          if (loadState.refresh is LoadState.NotLoading) {
+            val queries = history.itemSnapshotList.items
+            categorizedQueries.value = Helper.categorizeQueries(queries)
+          }
         }
-    }
-    
-    Column(
-        modifier = modifier
-            .fillMaxHeight()
-            .fillMaxWidth(fraction = 0.8f),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if ( authState is ResultState.Loading || historyState is ResultState.Loading ) {
-            BallPulseLoading()
+  }
+
+  Column(
+      modifier = modifier.fillMaxHeight().fillMaxWidth(fraction = 0.8f),
+      horizontalAlignment = Alignment.CenterHorizontally) {
+        if (authState is ResultState.Loading || historyState is ResultState.Loading) {
+          BallPulseLoading()
         } else {
-            ConstraintLayout(
-                modifier = Modifier
-                    .fillMaxSize(),
-            ) {
-                val ( search, divider, logo, histories, auth ) = createRefs()
-                
-                if (isLoggedIn) {
-                    Box(
-                        modifier = Modifier
-                            .constrainAs(search) {
-                                top.linkTo(parent.top)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                            }
-                            .padding(horizontal = 24.dp, vertical = 24.dp)
-                            .shadow(elevation = 3.dp, shape = RoundedCornerShape(36.dp))
-                            .clip(RoundedCornerShape(30.dp))
-                            .background(MaterialTheme.colorScheme.background)
-                            .fillMaxWidth()
-                    ) {
-                        OutlinedTextField(
-                            value = keywords,
-                            onValueChange = {
-                                keywords = it
-                            },
-                            placeholder = {
-                                Text(
-                                    text = stringResource(id = R.string.search),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Keyboard,
-                                )
-                            },
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done
-                            ),
-                            singleLine = true,
-                            keyboardActions = KeyboardActions (
+          ConstraintLayout(
+              modifier = Modifier.fillMaxSize(),
+          ) {
+            val (search, divider, logo, histories, auth) = createRefs()
+
+            if (isLoggedIn) {
+              Box(
+                  modifier =
+                      Modifier.constrainAs(search) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                          }
+                          .padding(horizontal = 24.dp, vertical = 24.dp)
+                          .shadow(elevation = 3.dp, shape = RoundedCornerShape(36.dp))
+                          .clip(RoundedCornerShape(30.dp))
+                          .background(MaterialTheme.colorScheme.background)
+                          .fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = keywords,
+                        onValueChange = { keywords = it },
+                        placeholder = {
+                          Text(
+                              text = stringResource(id = R.string.search),
+                              style = MaterialTheme.typography.labelMedium,
+                              color = Keyboard,
+                          )
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                        singleLine = true,
+                        keyboardActions =
+                            KeyboardActions(
                                 onDone = {
-                                    onFetchHistory(keywords.text)
-                                    keyboardController?.hide()
-                                }
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(
-                                        IconSax.Linear.SearchNormal),
-                                    contentDescription = stringResource(id = R.string.search),
-                                    modifier = Modifier.size(24.dp),
-                                    tint = Keyboard
-                                )
-                            },
-                            modifier = Modifier
-                                .padding(horizontal = 12.dp)
-                                .fillMaxWidth(),
-                            colors = OutlinedTextFieldDefaults.colors(
+                                  onFetchHistory(keywords.text)
+                                  keyboardController?.hide()
+                                }),
+                        leadingIcon = {
+                          Icon(
+                              painter = painterResource(IconSax.Linear.SearchNormal),
+                              contentDescription = stringResource(id = R.string.search),
+                              modifier = Modifier.size(24.dp),
+                              tint = Keyboard)
+                        },
+                        modifier = Modifier.padding(horizontal = 12.dp).fillMaxWidth(),
+                        colors =
+                            OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor = Color.Transparent,
                                 focusedBorderColor = Color.Transparent,
                                 focusedTextColor = Keyboard,
                                 focusedLabelColor = Keyboard,
                                 focusedContainerColor = MaterialTheme.colorScheme.background,
-                                unfocusedContainerColor = MaterialTheme.colorScheme.background
-                            )
-                        )
-                    }
-                    LazyColumn (
-                        modifier = Modifier
-                            .constrainAs(histories) {
-                                top.linkTo(search.bottom)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(divider.top)
-                                height = Dimension.fillToConstraints
-                            }
-                            .padding(horizontal = 24.dp)
-                            .fillMaxWidth()
-                    ) {
-                        categorizedQueries.value.forEach { (category, queries) ->
-                            if (queries.isEmpty()) return@forEach
-                            item {
-                                Text(
-                                    text = category,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Keyboard,
-                                    fontWeight = FontWeight.Normal,
-                                    modifier = Modifier
-                                        .padding(12.dp)
-                                )
-                            }
-                            items(queries.size) { index ->
-                                history[index]?.let {
-                                    Text(
-                                        text = it.productName,
-                                        style = MaterialTheme.typography.titleSmall,
-                                        color = Neutral900,
-                                        fontWeight = FontWeight.Bold,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        modifier = Modifier
-                                            .padding(12.dp)
-                                            .clickable {
-                                                val analysisData = history[index]?.let { item ->
-                                                    Helper.convertHistoryDataToAnalysisData(
-                                                        item
-                                                    )
-                                                }
-                                                if (analysisData != null) {
-                                                    onAnalyzeRouteNavigation(analysisData)
-                                                }
-                                            },
-                                    )
-                                }
-                            }
-                        }
-                        history.apply { 
-                            when {
-                                loadState.refresh is LoadState.Loading -> {
-                                    item {
-                                        LoadingNextPageItem(modifier = Modifier)
-                                    }
-                                }
-                                loadState.refresh is LoadState.Error -> {
-                                    val error = history.loadState.refresh as LoadState.Error
-                                    item {
-                                        ErrorMessage(
-                                            modifier = Modifier.fillParentMaxSize(),
-                                            message = error.error.localizedMessage!!,
-                                            onClickRetry = { retry() }
-                                        )
-                                    }
-                                }
-                                loadState.append is LoadState.Loading -> {
-                                    item { 
-                                        LoadingNextPageItem(modifier = Modifier)
-                                    }
-                                }
-                                loadState.append is LoadState.Error -> {
-                                    val error = history.loadState.append as LoadState.Error
-                                    item {
-                                        ErrorMessage(
-                                            modifier = Modifier,
-                                            message = error.error.localizedMessage!!,
-                                            onClickRetry = { retry() }
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    Column(
-                        modifier = Modifier
-                            .constrainAs(auth) {
-                                top.linkTo(parent.top)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(divider.top)
-                            }
-                            .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                                unfocusedContainerColor = MaterialTheme.colorScheme.background))
+                  }
+              LazyColumn(
+                  modifier =
+                      Modifier.constrainAs(histories) {
+                            top.linkTo(search.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(divider.top)
+                            height = Dimension.fillToConstraints
+                          }
+                          .padding(horizontal = 24.dp)
+                          .fillMaxWidth()) {
+                    categorizedQueries.value.forEach { (category, queries) ->
+                      if (queries.isEmpty()) return@forEach
+                      item {
                         Text(
-                            text = stringResource(R.string.sign_in_or_create_an_account),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.Black,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                        Text(
-                            text = stringResource(id = R.string.auth_description),
+                            text = category,
                             style = MaterialTheme.typography.labelMedium,
-                            color = Keyboard
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Column (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 24.dp),
-                            verticalArrangement = Arrangement.spacedBy(2.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Button(
-                                onClick = { onLoginDrawerNavigation() },
-                                modifier =  Modifier
-                                    .fillMaxWidth(0.7f),
-                                shape = RoundedCornerShape(6.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Brand900,
-                                )
-                            ) {
+                            color = Keyboard,
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier.padding(12.dp))
+                      }
+                      items(queries.size) { index ->
+                        history[index]?.let {
+                          Text(
+                              text = it.productName,
+                              style = MaterialTheme.typography.titleSmall,
+                              color = Neutral900,
+                              fontWeight = FontWeight.Bold,
+                              maxLines = 1,
+                              overflow = TextOverflow.Ellipsis,
+                              modifier =
+                                  Modifier.padding(12.dp).clickable {
+                                    val analysisData =
+                                        history[index]?.let { item ->
+                                          Helper.convertHistoryDataToAnalysisData(item)
+                                        }
+                                    if (analysisData != null) {
+                                      onAnalyzeRouteNavigation(analysisData)
+                                    }
+                                  },
+                          )
+                        }
+                      }
+                    }
+                    history.apply {
+                      when {
+                        loadState.refresh is LoadState.Loading -> {
+                          item { LoadingNextPageItem(modifier = Modifier) }
+                        }
+                        loadState.refresh is LoadState.Error -> {
+                          val error = history.loadState.refresh as LoadState.Error
+                          item {
+                            ErrorMessage(
+                                modifier = Modifier.fillParentMaxSize(),
+                                message = error.error.localizedMessage!!,
+                                onClickRetry = { retry() })
+                          }
+                        }
+                        loadState.append is LoadState.Loading -> {
+                          item { LoadingNextPageItem(modifier = Modifier) }
+                        }
+                        loadState.append is LoadState.Error -> {
+                          val error = history.loadState.append as LoadState.Error
+                          item {
+                            ErrorMessage(
+                                modifier = Modifier,
+                                message = error.error.localizedMessage!!,
+                                onClickRetry = { retry() })
+                          }
+                        }
+                      }
+                    }
+                  }
+            } else {
+              Column(
+                  modifier =
+                      Modifier.constrainAs(auth) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(divider.top)
+                          }
+                          .fillMaxWidth(),
+                  verticalArrangement = Arrangement.spacedBy(8.dp),
+                  horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(R.string.sign_in_or_create_an_account),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.Black,
+                        fontWeight = FontWeight.ExtraBold)
+                    Text(
+                        text = stringResource(id = R.string.auth_description),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Keyboard)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally) {
+                          Button(
+                              onClick = { onLoginDrawerNavigation() },
+                              modifier = Modifier.fillMaxWidth(0.7f),
+                              shape = RoundedCornerShape(6.dp),
+                              colors =
+                                  ButtonDefaults.buttonColors(
+                                      containerColor = Brand900,
+                                  )) {
                                 Text(
                                     text = stringResource(id = R.string.login_hint),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = Color.White,
-                                    fontWeight = FontWeight.Normal
-                                )
-                            }
-                            OutlinedButton(
-                                onClick = { onRegisterDrawerNavigation() },
-                                shape = RoundedCornerShape(6.dp),
-                                modifier =  Modifier
-                                    .fillMaxWidth(0.7f),
-                                border = BorderStroke(
-                                    width = 2.dp,
-                                    color = Brand900
-                                )
-                            ) {
+                                    fontWeight = FontWeight.Normal)
+                              }
+                          OutlinedButton(
+                              onClick = { onRegisterDrawerNavigation() },
+                              shape = RoundedCornerShape(6.dp),
+                              modifier = Modifier.fillMaxWidth(0.7f),
+                              border = BorderStroke(width = 2.dp, color = Brand900)) {
                                 Text(
                                     text = stringResource(id = R.string.register_hint),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = Color.Black,
-                                    fontWeight = FontWeight.Normal
-                                )
-                            }
+                                    fontWeight = FontWeight.Normal)
+                              }
                         }
-                    }
-                }
-                HorizontalDivider(
-                    thickness = 0.5.dp, 
-                    color = Keyboard,
-                    modifier = Modifier
-                        .constrainAs(divider) {
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(logo.top)
-                        }
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.logo_item_long),
-                    contentDescription = stringResource(id = R.string.app_name),
-                    modifier = Modifier
-                        .constrainAs(logo) {
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .size(90.dp)
-                )
+                  }
             }
+            HorizontalDivider(
+                thickness = 0.5.dp,
+                color = Keyboard,
+                modifier =
+                    Modifier.constrainAs(divider) {
+                      start.linkTo(parent.start)
+                      end.linkTo(parent.end)
+                      bottom.linkTo(logo.top)
+                    })
+            Image(
+                painter = painterResource(id = R.drawable.logo_item_long),
+                contentDescription = stringResource(id = R.string.app_name),
+                modifier =
+                    Modifier.constrainAs(logo) {
+                          start.linkTo(parent.start)
+                          end.linkTo(parent.end)
+                          bottom.linkTo(parent.bottom)
+                        }
+                        .size(90.dp))
+          }
         }
-    }
+      }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun DrawerPreview() {
-    val historyItems = listOf(
-        Helper.generateHistoryItem(),
-        Helper.generateHistoryItem(),
-        Helper.generateHistoryItem(),
-        Helper.generateHistoryItem(),
-        Helper.generateHistoryItem(),
-    )
-    
-    UlaScanTheme {
-        Drawer(
-            authState = ResultState.Default,
-            historyState = ResultState.Default,
-            history = flowOf(PagingData.from(historyItems)).collectAsLazyPagingItems(),
-            isLoggedIn = true,
-            onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
-            onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
-            onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
-            onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
+  val historyItems =
+      listOf(
+          Helper.generateHistoryItem(),
+          Helper.generateHistoryItem(),
+          Helper.generateHistoryItem(),
+          Helper.generateHistoryItem(),
+          Helper.generateHistoryItem(),
+      )
+
+  UlaScanTheme {
+    Drawer(
+        authState = ResultState.Default,
+        historyState = ResultState.Default,
+        history = flowOf(PagingData.from(historyItems)).collectAsLazyPagingItems(),
+        isLoggedIn = true,
+        onFetchHistory = { Log.d("ChatScreen", "Fetch history") },
+        onAnalyzeRouteNavigation = { Log.d("ChatScreen", "Navigate to analysis screen") },
+        onLoginDrawerNavigation = { Log.d("ChatScreen", "Navigate to login screen") },
+        onRegisterDrawerNavigation = { Log.d("ChatScreen", "Navigate to register screen") },
+        modifier = Modifier.fillMaxWidth())
+  }
 }

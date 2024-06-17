@@ -27,15 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.ehsanmsz.mszprogressindicator.progressindicator.BallClipRotateProgressIndicator
 import com.ulascan.app.R
 import com.ulascan.app.data.remote.response.AnalysisData
@@ -62,14 +59,19 @@ fun UserMessage(text: String) {
 }
 
 @Composable
-fun ProductDescription(productName: String, shopName: String, shopAvatar: String, productDescription: String, images: List<String>) {
+fun ProductDescription(
+    productName: String,
+    shopName: String,
+    shopAvatar: String,
+    productDescription: String,
+    images: List<String>
+) {
   Column(
       modifier =
-      Modifier
-          .fillMaxWidth()
-          .clip(RoundedCornerShape(6.dp))
-          .background(Brand100)
-          .padding(16.dp),
+          Modifier.fillMaxWidth()
+              .clip(RoundedCornerShape(6.dp))
+              .background(Brand100)
+              .padding(16.dp),
   ) {
     Text(
         text = productName,
@@ -81,25 +83,24 @@ fun ProductDescription(productName: String, shopName: String, shopAvatar: String
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically) {
-        SubcomposeAsyncImage(
+          SubcomposeAsyncImage(
               model = shopAvatar,
-              loading = { 
-                  BallClipRotateProgressIndicator(
+              loading = {
+                BallClipRotateProgressIndicator(
                     color = Keyboard,
-                    minDiameter = 10.dp, 
+                    minDiameter = 10.dp,
                     maxDiameter = 20.dp,
-                  )
-              },  
+                )
+              },
               contentDescription = stringResource(id = R.string.app_name),
               contentScale = ContentScale.FillBounds,
-              modifier = Modifier
-                  .clip(CircleShape)
-                  .size(30.dp)
-                  .wrapContentHeight(align = Alignment.CenterVertically)
-                  .wrapContentWidth(align = Alignment.CenterHorizontally)
-            ,
+              modifier =
+                  Modifier.clip(CircleShape)
+                      .size(30.dp)
+                      .wrapContentHeight(align = Alignment.CenterVertically)
+                      .wrapContentWidth(align = Alignment.CenterHorizontally),
           )
-        Text(
+          Text(
               text = shopName,
               color = Color.Black,
               style = MaterialTheme.typography.labelMedium,
@@ -114,29 +115,28 @@ fun ProductDescription(productName: String, shopName: String, shopAvatar: String
         fontWeight = FontWeight.Normal,
     )
     Spacer(modifier = Modifier.height(12.dp))
-    LazyRow (
-      horizontalArrangement = Arrangement.spacedBy(7.dp),
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(7.dp),
     ) {
-        items(images.size) { index ->
-            SubcomposeAsyncImage(
-                model = images[index],
-                loading = {
-                    BallClipRotateProgressIndicator(
-                        color = Keyboard,
-                        minDiameter = 20.dp,
-                        maxDiameter = 30.dp,
-                    )
-                }, 
-                contentDescription = stringResource(id = R.string.app_name),
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
-                    .size(60.dp)
+      items(images.size) { index ->
+        SubcomposeAsyncImage(
+            model = images[index],
+            loading = {
+              BallClipRotateProgressIndicator(
+                  color = Keyboard,
+                  minDiameter = 20.dp,
+                  maxDiameter = 30.dp,
+              )
+            },
+            contentDescription = stringResource(id = R.string.app_name),
+            contentScale = ContentScale.FillBounds,
+            modifier =
+                Modifier.size(60.dp)
                     .clip(RoundedCornerShape(4.dp))
                     .wrapContentHeight(align = Alignment.CenterVertically)
-                    .wrapContentWidth(align = Alignment.CenterHorizontally)
-                ,
-            )
-        }
+                    .wrapContentWidth(align = Alignment.CenterHorizontally),
+        )
+      }
     }
   }
 }
@@ -145,11 +145,10 @@ fun ProductDescription(productName: String, shopName: String, shopAvatar: String
 fun AnalysisSummary(summary: String) {
   Column(
       modifier =
-      Modifier
-          .fillMaxWidth()
-          .clip(RoundedCornerShape(6.dp))
-          .background(Brand100)
-          .padding(16.dp)) {
+          Modifier.fillMaxWidth()
+              .clip(RoundedCornerShape(6.dp))
+              .background(Brand100)
+              .padding(16.dp)) {
         Text(
             text = stringResource(id = R.string.analysis_summary),
             color = Color.Black,
@@ -167,28 +166,18 @@ fun AnalysisSummary(summary: String) {
 }
 
 @Composable
-fun ResponseMessage(
-    data: AnalysisData,
-    onAnalyzeRouteNavigation: (AnalysisData) -> Unit
-) {
-  Column(
-      modifier = Modifier.fillMaxHeight(),
-      verticalArrangement = Arrangement.spacedBy(8.dp)
-  ) {
+fun ResponseMessage(data: AnalysisData, onAnalyzeRouteNavigation: (AnalysisData) -> Unit) {
+  Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
     Image(
         painter = painterResource(id = R.drawable.logo_item_long),
         contentDescription = stringResource(id = R.string.app_name),
-        modifier = Modifier
-            .width(80.dp)
-            .height(25.dp))
+        modifier = Modifier.width(80.dp).height(25.dp))
     Column(
         modifier =
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.White)
-            .padding(15.dp)
-    ) {
+            Modifier.fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color.White)
+                .padding(15.dp)) {
           Column(
               verticalArrangement = Arrangement.spacedBy(12.dp),
           ) {
@@ -203,30 +192,26 @@ fun ResponseMessage(
                 productName = data.productName,
                 productDescription = data.productDescription,
                 shopAvatar = data.shopAvatar,
-                images = data.imageUrls
-            )
+                images = data.imageUrls)
             AnalysisSummary(data.summary)
           }
-        Spacer(modifier = Modifier.height(10.dp))
-        Button(
-            onClick = { 
-                onAnalyzeRouteNavigation(data)
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(6.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Brand900,
-            )
-        ) {
-            Text(
-                text = stringResource(id = R.string.sentiment_analysis),
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.White,
-                fontWeight = FontWeight.Normal,
-            )
+          Spacer(modifier = Modifier.height(10.dp))
+          Button(
+              onClick = { onAnalyzeRouteNavigation(data) },
+              modifier = Modifier.fillMaxWidth(),
+              shape = RoundedCornerShape(6.dp),
+              colors =
+                  ButtonDefaults.buttonColors(
+                      containerColor = Brand900,
+                  )) {
+                Text(
+                    text = stringResource(id = R.string.sentiment_analysis),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color.White,
+                    fontWeight = FontWeight.Normal,
+                )
+              }
         }
-    }
   }
 }
 
@@ -243,5 +228,5 @@ fun UserMessagePreview() {
 @Preview
 fun ResponseMessagePreview() {
   val instance = Helper.generateAnalysisData()
-  UlaScanTheme { ResponseMessage(data = instance, onAnalyzeRouteNavigation = { } ) }
+  UlaScanTheme { ResponseMessage(data = instance, onAnalyzeRouteNavigation = {}) }
 }

@@ -47,161 +47,112 @@ fun PieChart(
     animDuration: Int = 1000,
 ) {
 
-    val totalSum = data.values.sum()
-    val floatValue = mutableListOf<Float>()
+  val totalSum = data.values.sum()
+  val floatValue = mutableListOf<Float>()
 
+  data.values.forEachIndexed { index, values ->
+    floatValue.add(index, 360 * values.toFloat() / totalSum.toFloat())
+  }
 
-    data.values.forEachIndexed { index, values ->
-        floatValue.add(index, 360 * values.toFloat() / totalSum.toFloat())
-    }
+  val colors =
+      listOf(
+          Brand700,
+          ChartNegative,
+      )
 
-    val colors = listOf(
-        Brand700,
-        ChartNegative,
-    )
+  var animationPlayed by remember { mutableStateOf(false) }
 
-    var animationPlayed by remember { mutableStateOf(false) }
+  var lastValue = 0f
 
-    var lastValue = 0f
+  val animateSize by
+      animateFloatAsState(
+          targetValue = if (animationPlayed) radiusOuter.value * 1.5f else 0f,
+          animationSpec =
+              tween(durationMillis = animDuration, delayMillis = 0, easing = LinearOutSlowInEasing),
+          label = "")
 
-    val animateSize by animateFloatAsState(
-        targetValue = if (animationPlayed) radiusOuter.value * 1.5f else 0f,
-        animationSpec = tween(
-            durationMillis = animDuration,
-            delayMillis = 0,
-            easing = LinearOutSlowInEasing
-        ), label = ""
-    )
+  val animateRotation by
+      animateFloatAsState(
+          targetValue = if (animationPlayed) 90f * 11f else 0f,
+          animationSpec =
+              tween(durationMillis = animDuration, delayMillis = 0, easing = LinearOutSlowInEasing),
+          label = "")
 
-    val animateRotation by animateFloatAsState(
-        targetValue = if (animationPlayed) 90f * 11f else 0f,
-        animationSpec = tween(
-            durationMillis = animDuration,
-            delayMillis = 0,
-            easing = LinearOutSlowInEasing
-        ), label = ""
-    )
+  LaunchedEffect(key1 = true) { animationPlayed = true }
 
-    LaunchedEffect(key1 = true) {
-        animationPlayed = true
-    }
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+  Column(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Box(
+        modifier = Modifier.size(animateSize.dp),
+        contentAlignment = Alignment.Center,
     ) {
-        Box(
-            modifier = Modifier
-                .size(animateSize.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Canvas(
-                modifier = Modifier
-                    .offset { IntOffset.Zero }
-                    .size(radiusOuter * 1f)
-                    .rotate(animateRotation)
-                    .scale(1f)
+      Canvas(
+          modifier =
+              Modifier.offset { IntOffset.Zero }
+                  .size(radiusOuter * 1f)
+                  .rotate(animateRotation)
+                  .scale(1f)) {
+            drawCircle(color = Color.White, radius = radiusOuter.toPx() - radiusOuter.toPx() / 3)
+            // Draw line pointing to the arc and text
+            floatValue.forEachIndexed { index, value ->
+              drawArc(
+                  color = colors[index],
+                  lastValue - 100,
+                  value - 30,
+                  useCenter = false,
+                  style = Stroke(width = chartBarWidth, cap = StrokeCap.Round))
 
-            ) {
-                drawCircle(
-                    color = Color.White,
-                    radius = radiusOuter.toPx() - radiusOuter.toPx() / 3
-                )
-                // Draw line pointing to the arc and text
-                floatValue.forEachIndexed { index, value ->
-                    drawArc(
-                        color = colors[index],
-                        lastValue - 100,
-                        value - 30,
-                        useCenter = false,
-                        style = Stroke(width = chartBarWidth, cap = StrokeCap.Round)
-                    )
-
-                    lastValue += value
-                }
-
+              lastValue += value
             }
-        }
-        DetailsPieChart(
-            data = data,
-            colors = colors,
-            size = animateSize
-        )
+          }
     }
+    DetailsPieChart(data = data, colors = colors, size = animateSize)
+  }
 }
 
 @Composable
-fun DetailsPieChart(
-    data: Map<String, Int>,
-    colors: List<Color>,
-    size: Float
-) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 32.dp)
-            .padding(bottom = 12.dp)
-            .width(size.dp),
-        horizontalAlignment =  Alignment.CenterHorizontally
-    ) {
+fun DetailsPieChart(data: Map<String, Int>, colors: List<Color>, size: Float) {
+  Column(
+      modifier = Modifier.padding(horizontal = 32.dp).padding(bottom = 12.dp).width(size.dp),
+      horizontalAlignment = Alignment.CenterHorizontally) {
         // create the data items
         data.values.forEachIndexed { index, value ->
-            DetailsPieChartItem(
-                data = Pair(data.keys.elementAt(index), value),
-                color = colors[index]
-            )
+          DetailsPieChartItem(data = Pair(data.keys.elementAt(index), value), color = colors[index])
         }
-
-    }
+      }
 }
 
 @Composable
-fun DetailsPieChartItem(
-    data: Pair<String, Int>,
-    height: Dp = 32.dp,
-    color: Color
-) {
+fun DetailsPieChartItem(data: Pair<String, Int>, height: Dp = 32.dp, color: Color) {
 
-    Surface(
-        modifier = Modifier,
-        color = Color.Transparent
-    ) {
+  Surface(modifier = Modifier, color = Color.Transparent) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center) {
+          Box(
+              modifier =
+                  Modifier.background(color = color, shape = RoundedCornerShape(10.dp))
+                      .size(height))
 
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = color,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .size(height)
-            )
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    modifier = Modifier.padding(start = 15.dp),
-                    text = data.first,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp,
-                    color = Color.Black
-                )
-                Text(
-                    modifier = Modifier.padding(start = 15.dp),
-                    text = data.second.toString(),
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
-            }
-
+          Column(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                modifier = Modifier.padding(start = 15.dp),
+                text = data.first,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                color = Color.Black)
+            Text(
+                modifier = Modifier.padding(start = 15.dp),
+                text = data.second.toString(),
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                color = Color.Gray)
+          }
         }
-
-    }
-
+  }
 }
 
 @Composable
@@ -212,68 +163,53 @@ fun NormalPieChart(
     animDuration: Int = 1000,
 ) {
 
-    val totalSum = data.values.sum()
-    val floatValue = mutableListOf<Float>()
+  val totalSum = data.values.sum()
+  val floatValue = mutableListOf<Float>()
 
-    data.values.forEachIndexed { index, values ->
-        floatValue.add(index, 360 * values.toFloat() / totalSum.toFloat())
-    }
+  data.values.forEachIndexed { index, values ->
+    floatValue.add(index, 360 * values.toFloat() / totalSum.toFloat())
+  }
 
-    val colors = listOf(
-        Error600,
-        Brand700,
-    )
+  val colors =
+      listOf(
+          Error600,
+          Brand700,
+      )
 
-    var animationPlayed by remember { mutableStateOf(false) }
+  var animationPlayed by remember { mutableStateOf(false) }
 
-    var lastValue = 0f
+  var lastValue = 0f
 
-    val animateSize by animateFloatAsState(
-        targetValue = if (animationPlayed) radiusOuter.value * 2f else 0f,
-        animationSpec = tween(
-            durationMillis = animDuration,
-            delayMillis = 0,
-            easing = LinearOutSlowInEasing
-        ), label = ""
-    )
+  val animateSize by
+      animateFloatAsState(
+          targetValue = if (animationPlayed) radiusOuter.value * 2f else 0f,
+          animationSpec =
+              tween(durationMillis = animDuration, delayMillis = 0, easing = LinearOutSlowInEasing),
+          label = "")
 
-    val animateRotation by animateFloatAsState(
-        targetValue = if (animationPlayed) 90f * 11f else 0f,
-        animationSpec = tween(
-            durationMillis = animDuration,
-            delayMillis = 0,
-            easing = LinearOutSlowInEasing
-        ), label = ""
-    )
+  val animateRotation by
+      animateFloatAsState(
+          targetValue = if (animationPlayed) 90f * 11f else 0f,
+          animationSpec =
+              tween(durationMillis = animDuration, delayMillis = 0, easing = LinearOutSlowInEasing),
+          label = "")
 
-    LaunchedEffect(key1 = true) {
-        animationPlayed = true
-    }
+  LaunchedEffect(key1 = true) { animationPlayed = true }
 
-    Box(
-        modifier = Modifier.size(animateSize.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(
-            modifier = Modifier
-                .offset { IntOffset.Zero }
-                .size(radiusOuter * 2f)
-                .rotate(animateRotation)
-        ) {
-            // draw each Arc for each data entry in Pie Chart
-            floatValue.forEachIndexed { index, value ->
-                drawArc(
-                    color = colors[index],
-                    lastValue + 90f,
-                    value,
-                    useCenter = false,
-                    style = Stroke(chartBarWidth, cap = StrokeCap.Butt)
-                )
-                lastValue += value
-            }
+  Box(modifier = Modifier.size(animateSize.dp), contentAlignment = Alignment.Center) {
+    Canvas(
+        modifier =
+            Modifier.offset { IntOffset.Zero }.size(radiusOuter * 2f).rotate(animateRotation)) {
+          // draw each Arc for each data entry in Pie Chart
+          floatValue.forEachIndexed { index, value ->
+            drawArc(
+                color = colors[index],
+                lastValue + 90f,
+                value,
+                useCenter = false,
+                style = Stroke(chartBarWidth, cap = StrokeCap.Butt))
+            lastValue += value
+          }
         }
-
-
-    }
-
+  }
 }

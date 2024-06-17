@@ -18,25 +18,21 @@ import com.ulascan.app.ui.theme.UlaScanTheme
 
 @Composable
 fun Guide(text: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(30))
-            .background(Color.White)
-            .padding(15.dp, 14.dp)
-    ) {
+  Box(
+      modifier =
+          Modifier.clip(RoundedCornerShape(30)).background(Color.White).padding(15.dp, 14.dp)) {
         Text(
             text = text,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelMedium,
-            color = D1Chat
-        )
-    }
+            color = D1Chat)
+      }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun GuidePreview() {
-    UlaScanTheme {
-        Guide("Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.")
-    }
+  UlaScanTheme {
+    Guide("Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.")
+  }
 }
