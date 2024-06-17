@@ -45,10 +45,8 @@ fun Any.castToDoubleThenToInt(): Int {
 
 fun HttpException.getErrorMessage(): String {
   val jsonInString = this.response()?.errorBody()?.string()
-  Log.d("JsonInSTRING", jsonInString.toString())
   val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
 
   val errorMessage = errorBody.message
-  Log.d("errorBody", errorMessage.toString())
   return errorMessage ?: "An error occurred, please try again in 5 minutes."
 }

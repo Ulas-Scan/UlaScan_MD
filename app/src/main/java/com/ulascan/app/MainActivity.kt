@@ -121,8 +121,6 @@ class MainActivity : ComponentActivity() {
           }
 
           composable(NavigationItem.Login.route) {
-            Log.d("Login Route", "User: $user")
-            Log.d("Login Route", "Auth State Error?: ${authState.value is ResultState.Error}")
             if (user.isLoggedIn &&
                 (authState.value !is ResultState.Error ||
                     authState.value !is ResultState.Loading)) {
