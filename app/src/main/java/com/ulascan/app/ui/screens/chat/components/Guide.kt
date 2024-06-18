@@ -2,11 +2,14 @@ package com.ulascan.app.ui.screens.chat.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -20,10 +23,15 @@ import com.ulascan.app.ui.theme.UlaScanTheme
 fun Guide(text: String, modifier: Modifier = Modifier) {
   Box(
       modifier =
-          Modifier.clip(RoundedCornerShape(30)).background(Color.White).padding(15.dp, 14.dp)) {
+          Modifier
+              .fillMaxWidth()
+              .clip(RoundedCornerShape(30))
+              .background(Color.White).padding(15.dp, 14.dp)) {
         Text(
             text = text,
             textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth(),
             style = MaterialTheme.typography.labelMedium,
             color = D1Chat)
       }
@@ -33,6 +41,6 @@ fun Guide(text: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 fun GuidePreview() {
   UlaScanTheme {
-    Guide("Nam et dictum erat. Nunc pulvinar pretium dapibus. Cras tempus maximus tortor.")
+    Guide("Out application will process the link you provide.")
   }
 }

@@ -10,8 +10,10 @@ val urlPattern =
         "^https:\\/\\/www\\.tokopedia\\.com\\/[a-zA-Z0-9\\-]+\\/[a-zA-Z0-9\\-]+(?:\\?[a-zA-Z0-9=&]*)?\$",
         Pattern.CASE_INSENSITIVE)
 
+val secondaryUrlPattern = Pattern.compile("https://tokopedia\\.link/[\\w-]+")
+
 fun String.isUrl(): Boolean {
-  return urlPattern.matcher(this).matches()
+  return urlPattern.matcher(this).matches() || secondaryUrlPattern.matcher(this).matches()
 }
 
 fun String.toCapitalize(): String {
