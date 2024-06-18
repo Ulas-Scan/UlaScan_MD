@@ -1,6 +1,7 @@
 package com.ulascan.app.ui.factory
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ulascan.app.di.Injection

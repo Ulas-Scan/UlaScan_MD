@@ -1,6 +1,7 @@
 package com.ulascan.app.di
 
 import android.content.Context
+import android.util.Log
 import com.ulascan.app.data.remote.UserModel
 import com.ulascan.app.data.remote.UserPreferences
 import com.ulascan.app.data.remote.api.ApiConfig
@@ -24,7 +25,7 @@ object Injection {
 
   private fun getApiService(context: Context): ApiService {
     val token = getToken(context)
-
+  
     return ApiConfig.getApiService(token)
   }
 
