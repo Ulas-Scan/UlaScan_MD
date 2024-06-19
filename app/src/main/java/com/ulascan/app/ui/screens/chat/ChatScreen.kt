@@ -3,6 +3,7 @@ package com.ulascan.app.ui.screens.chat
 import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -84,6 +85,18 @@ fun ChatScreen(
                     if (drawerState.isOpened()) Color.White
                     else MaterialTheme.colorScheme.background)
                 .offset(x = if (drawerState.isOpened()) 0.dp else -screenWidth.value.dp))
+    
+      // Invisible content to close the drawer 
+      Box(
+          modifier = Modifier
+              .fillMaxSize()
+              .background(Color.Transparent)
+              .offset(x = animatedOffset)
+              .clickable ( drawerState == DrawerState.Opened ) {
+                  drawerState = DrawerState.Closed
+              }
+      )
+      
     ChatContent(
         drawerState = drawerState,
         onDrawerClick = { drawerState = it },
@@ -95,7 +108,9 @@ fun ChatScreen(
         onCancelChatClickListener = onCancelChatClickListener,
         onAnalyzeRouteNavigation = onAnalyzeRouteNavigation,
         onLogoutClickListener = onLogoutClickListener,
-        modifier = Modifier.offset(x = animatedOffset))
+        modifier = Modifier
+            .offset(x = animatedOffset)
+    )
   }
 }
 

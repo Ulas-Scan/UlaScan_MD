@@ -39,8 +39,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ulascan.app.R
 import com.ulascan.app.data.remote.response.AnalysisData
-import com.ulascan.app.ui.screens.detailAnalysis.NormalPieChart
-import com.ulascan.app.ui.screens.detailAnalysis.PieChart
+import com.ulascan.app.ui.screens.detail.NormalPieChart
+import com.ulascan.app.ui.screens.detail.PieChart
 import com.ulascan.app.ui.theme.Brand200
 import com.ulascan.app.ui.theme.Brand600
 import com.ulascan.app.ui.theme.Brand900
@@ -58,14 +58,18 @@ fun DetailScreen(navController: NavController = rememberNavController(),
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(modifier = Modifier.fillMaxWidth(),
-                    text = data.productName,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis) },
+                title = { 
+                    Text(
+                        text = data.productName,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White,
+                        modifier = Modifier.fillMaxWidth(),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center,
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

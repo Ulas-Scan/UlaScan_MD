@@ -320,7 +320,9 @@ fun ChatContent(
     onCancelChatClickListener: () -> Unit,
     onLogoutClickListener: () -> Unit
 ) {
-  ConstraintLayout(modifier = modifier.fillMaxHeight()) {
+  ConstraintLayout(
+      modifier = modifier.fillMaxHeight(),
+  ) {
     val (header, content, chatField) = createRefs()
 
     Header(

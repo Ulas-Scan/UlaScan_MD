@@ -1,4 +1,4 @@
-package com.ulascan.app.ui.screens.detailAnalysis
+package com.ulascan.app.ui.screens.detail
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -149,7 +149,7 @@ fun DetailsPieChartItem(data: Pair<String, Int>, height: Dp = 32.dp, color: Colo
                 text = data.second.toString(),
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
-                color = Color.Gray)
+                color = Color.Black)
           }
         }
   }
