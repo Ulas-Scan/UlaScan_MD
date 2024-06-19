@@ -42,8 +42,8 @@ import com.ulascan.app.ui.theme.Error600
 @Composable
 fun PieChart(
     data: Map<String, Int>,
-    radiusOuter: Dp = 200.dp,
-    chartBarWidth: Float = 150f,
+    radiusOuter: Dp = 190.dp,
+    chartBarWidth: Float = 135f,
     animDuration: Int = 1000,
 ) {
 
@@ -99,7 +99,7 @@ fun PieChart(
             floatValue.forEachIndexed { index, value ->
               drawArc(
                   color = colors[index],
-                  lastValue - 100,
+                  lastValue - 150,
                   value - 30,
                   useCenter = false,
                   style = Stroke(width = chartBarWidth, cap = StrokeCap.Round))

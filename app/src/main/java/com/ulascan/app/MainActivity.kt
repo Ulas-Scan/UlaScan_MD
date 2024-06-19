@@ -1,5 +1,6 @@
 package com.ulascan.app
 
+import DetailScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,11 +43,10 @@ import com.ulascan.app.ui.screens.auth.register.RegisterViewModel
 import com.ulascan.app.ui.screens.chat.ChatScreen
 import com.ulascan.app.ui.screens.chat.ChatViewModel
 import com.ulascan.app.ui.screens.chat.viewmodel.AuthenticatedChatViewModel
-import com.ulascan.app.ui.screens.detailAnalysis.DetailAnalysisScreen
 import com.ulascan.app.ui.screens.initial.InitialScreen
 import com.ulascan.app.ui.theme.UlaScanTheme
-import kotlin.reflect.typeOf
 import kotlinx.coroutines.flow.flowOf
+import kotlin.reflect.typeOf
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -203,7 +203,7 @@ class MainActivity : ComponentActivity() {
             ->
             val data: AnalysisData = backStackEntry.toRoute()
 
-            DetailAnalysisScreen(navController, data)
+            DetailScreen(navController, data)
           }
         }
   }
