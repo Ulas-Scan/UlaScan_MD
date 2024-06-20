@@ -45,6 +45,7 @@
     <string name="sign_in_or_create_an_account">Masuk atau buat akun</string>
     <string name="auth_description"> Membuka fitur riwayat analisis. </string>
     <string name="retry"> Coba Lagi </string>
+    <string name="overview">%1$s%% pembeli puas dengan pembelian produk secara keseluruhan </string>
 
     <string-array name="guides">
         <item>Tempelkan link produk yang akan Anda beli ke dalam textbox dibawah.</item>

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -44,6 +46,7 @@ import com.ulascan.app.ui.theme.Brand200
 import com.ulascan.app.ui.theme.Brand600
 import com.ulascan.app.ui.theme.Brand900
 import com.ulascan.app.ui.theme.Neutral900
+import com.ulascan.app.ui.theme.UlaScanTheme
 import com.ulascan.app.utils.Helper
 import com.ulascan.app.utils.castTo
 import com.ulascan.app.utils.castToDoubleThenToInt
@@ -87,7 +90,8 @@ fun DetailScreen(navController: NavController = rememberNavController(),
         paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxSize().verticalScroll(scrollState)
+                .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(paddingValues)
                 .background(
                     brush = Brush.verticalGradient(
@@ -99,7 +103,8 @@ fun DetailScreen(navController: NavController = rememberNavController(),
                         ),
                         startY = 0.0f,
                         endY = Float.POSITIVE_INFINITY
-                    ))
+                    )
+                )
         ) {
             PieChart(
                 data = mapOf(
@@ -111,68 +116,72 @@ fun DetailScreen(navController: NavController = rememberNavController(),
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
                     .clip(shape = RoundedCornerShape(20.dp))
                     .background(Color.White)
             ) {
                 Text(
-                    text = "${((data.countPositive.toDouble() / (data.countPositive + data.countNegative)) * 100).toInt()}% of buyers are satisfied \nwith purchasing the product overall",
+                    text = stringResource(id = R.string.overview, ((data.countPositive.toDouble() / (data.countPositive + data.countNegative)) * 100).toInt()),
                     color = Brand900,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontSize = 11.sp,
+                    lineHeight = 14.sp,
+                    letterSpacing = 0.5.sp,
+                    fontWeight = FontWeight.ExtraBold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 )
             }
-
-            Spacer(modifier = Modifier.size(16.dp))
-
+            Spacer(modifier = Modifier.height(12.dp))
+            
             ProductStats(
                 rating = data.rating,
                 stars = data.bintang.castTo<Double>(),
                 reviews = data.ulasan
             )
 
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Ringkasan Analisis
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
                     .clip(shape = RoundedCornerShape(20.dp))
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(20.dp))
+                        .clip(shape = RoundedCornerShape(6.dp))
                         .background(Color.White)
                         .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.analysis_summary),
                         color = Neutral900,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.ExtraBold,
+                        lineHeight = 14.sp,
                         textAlign = TextAlign.Start,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp)
                     )
                     Text(
                         text = data.summary,
                         color = Neutral900,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontSize = 10.sp,
+                        lineHeight = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Justify,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             SentimentAnalysis(
                 packaging = data.packaging.castToDoubleThenToInt(),
@@ -180,13 +189,13 @@ fun DetailScreen(navController: NavController = rememberNavController(),
                 adminResponse = data.adminResponse.castToDoubleThenToInt()
             )
 
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Product Condition
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 0.dp)
                     .clip(shape = RoundedCornerShape(20.dp))
             ) {
 
@@ -201,8 +210,9 @@ fun DetailScreen(navController: NavController = rememberNavController(),
                     Text(
                         text = stringResource(R.string.product_condition),
                         color = Neutral900,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontSize = 8.sp,
+                        lineHeight = 14.sp,
+                        letterSpacing = 0.15.sp,                        
                         textAlign = TextAlign.Start,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -230,9 +240,11 @@ fun DetailScreen(navController: NavController = rememberNavController(),
                                 id = R.string.product_condition_message,
                                 data.productCondition.toInt()
                             ),
-                            color = Neutral900,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
+                            color = Color.Black,
+                            fontSize = 10.sp,
+                            lineHeight = 14.sp,
+                            letterSpacing = 0.5.sp,
+                            fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Justify,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -248,7 +260,7 @@ fun SentimentAnalysis(packaging: Int, delivery: Int, adminResponse: Int) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .clip(shape = RoundedCornerShape(20.dp))
     ) {
 
@@ -258,7 +270,7 @@ fun SentimentAnalysis(packaging: Int, delivery: Int, adminResponse: Int) {
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(20.dp))
                 .background(Color.White)
-                .padding(16.dp),
+                .padding(horizontal = 15.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SentimentItems(
@@ -283,10 +295,13 @@ fun SentimentAnalysis(packaging: Int, delivery: Int, adminResponse: Int) {
 
 @Composable
 fun ProductStats(rating: Int, stars: Double, reviews: Int) {
-    Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(
             modifier =
-            Modifier.fillMaxWidth()
+            Modifier
+                .fillMaxWidth()
                 .weight(1f)
                 .clip(shape = RoundedCornerShape(20.dp))
                 .background(Color.White)
@@ -301,14 +316,14 @@ fun ProductStats(rating: Int, stars: Double, reviews: Int) {
             Text(
                 text = "$rating",
                 color = Neutral900,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.ExtraBold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth())
             Text(
                 text = stringResource(id = R.string.rating),
                 color = Neutral900,
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth())
@@ -316,7 +331,8 @@ fun ProductStats(rating: Int, stars: Double, reviews: Int) {
 
         Column(
             modifier =
-            Modifier.fillMaxWidth()
+            Modifier
+                .fillMaxWidth()
                 .weight(1f)
                 .clip(shape = RoundedCornerShape(20.dp))
                 .background(Color.White)
@@ -330,21 +346,22 @@ fun ProductStats(rating: Int, stars: Double, reviews: Int) {
             Text(
                 text = "${String.format("%.1f", (stars.toString().toDoubleOrNull() ?: 0.0 ))}/5.0",
                 color = Neutral900,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.ExtraBold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth())
             Text(
                 text = stringResource(R.string.star),
                 color = Neutral900,
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth())
         }
         Column(
             modifier =
-            Modifier.fillMaxWidth()
+            Modifier
+                .fillMaxWidth()
                 .weight(1f)
                 .clip(shape = RoundedCornerShape(20.dp))
                 .background(Color.White)
@@ -358,14 +375,14 @@ fun ProductStats(rating: Int, stars: Double, reviews: Int) {
             Text(
                 text = "$reviews",
                 color = Neutral900,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.ExtraBold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth())
             Text(
                 text = stringResource(R.string.review),
                 color = Neutral900,
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth())
@@ -383,25 +400,28 @@ fun SentimentItems(
         Modifier
             .fillMaxWidth()
             .clip(shape = RoundedCornerShape(20.dp))
-            .background(Color.White)
-            .padding(8.dp),
+            .background(Color.White),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically) {
         CircleWithNumber(number = percentage)
 
         Column(
-            modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = title,
                 color = Color.Black,
-                fontSize = 12.sp,
+                fontSize = 8.sp,
+                lineHeight = 14.sp,
+                letterSpacing = 0.15.sp,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start)
             Text(
                 text = content,
                 color = Color.Black,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
+                fontSize = 10.sp,
+                lineHeight = 14.sp,
+                letterSpacing = 0.5.sp,
+                fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Start)
         }
     }
@@ -415,13 +435,14 @@ fun CircleWithNumber(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(60.dp)
+            .size(42.dp)
             .background(color = Brand200, shape = CircleShape)) {
         Text(
             text = "$number%",
             color = Color.Black,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Normal,
+            style = MaterialTheme.typography.titleSmall,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center)
     }
 }
@@ -430,5 +451,7 @@ fun CircleWithNumber(
 @Composable
 fun ColumnWithTopBarPreview() {
     val data = Helper.generateAnalysisData()
-    DetailScreen(data = data)
+    UlaScanTheme {
+        DetailScreen(data = data)   
+    }
 }

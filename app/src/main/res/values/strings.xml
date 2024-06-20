@@ -44,6 +44,7 @@
     <string name="sign_in_or_create_an_account">Sign in or create an account</string>
     <string name="auth_description"> Unlock history analysis feature. </string>
     <string name="retry"> Retry </string>
+    <string name="overview">%1$s%% of buyers are satisfied with purchasing the product overall </string>
 
     <string-array name="guides">
         <item>Paste the link for the product you want to buy into the text box below. </item>
