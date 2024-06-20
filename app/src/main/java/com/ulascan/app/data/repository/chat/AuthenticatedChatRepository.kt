@@ -12,6 +12,7 @@ import com.ulascan.app.data.states.ResultState
 import com.ulascan.app.utils.getErrorMessage
 import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
+import java.io.IOException
 
 class AuthenticatedChatRepository(private val apiService: ApiService) : UserChatRepository {
   override suspend fun getHistory(): ResultState<HistoriesResponse> {
@@ -20,6 +21,10 @@ class AuthenticatedChatRepository(private val apiService: ApiService) : UserChat
       ResultState.Success(response)
     } catch (error: HttpException) {
       ResultState.Error(error.getErrorMessage())
+    } catch (error: IOException) {
+        ResultState.Error("No internet connection. Please check your network and try again.")
+    } catch (error: Exception) {
+        ResultState.Error("An unexpected error occurred: ${error.localizedMessage}")
     }
   }
 
@@ -36,6 +41,10 @@ class AuthenticatedChatRepository(private val apiService: ApiService) : UserChat
       ResultState.Success(response)
     } catch (error: HttpException) {
       ResultState.Error(error.getErrorMessage())
+    } catch (error: IOException) {
+        ResultState.Error("No internet connection. Please check your network and try again.")
+    } catch (error: Exception) {
+        ResultState.Error("An unexpected error occurred: ${error.localizedMessage}")
     }
   }
 

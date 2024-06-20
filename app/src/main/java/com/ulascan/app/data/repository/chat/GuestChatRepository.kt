@@ -6,6 +6,7 @@ import com.ulascan.app.data.repository.ChatRepository
 import com.ulascan.app.data.states.ResultState
 import com.ulascan.app.utils.getErrorMessage
 import retrofit2.HttpException
+import java.io.IOException
 
 class GuestChatRepository(private val apiService: ApiService) : ChatRepository {
 
@@ -15,6 +16,10 @@ class GuestChatRepository(private val apiService: ApiService) : ChatRepository {
       ResultState.Success(response)
     } catch (error: HttpException) {
       ResultState.Error(error.getErrorMessage())
+    } catch (error: IOException) {
+      ResultState.Error("No internet connection. Please check your network and try again.")
+    } catch (error: Exception) {
+      ResultState.Error("An unexpected error occurred: ${error.localizedMessage}")
     }
   }
 

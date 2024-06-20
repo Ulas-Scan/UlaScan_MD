@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.io.IOException
 
 class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
 
@@ -31,6 +32,9 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
       } catch (e: HttpException) {
         _uiState.value = LoginUiState.Error(e.getErrorMessage())
+      } catch (e: IOException) {
+        _uiState.value =
+          LoginUiState.Error("No internet connection. Please check your network and try again.")
       } catch (e: Exception) {
         _uiState.value = LoginUiState.Error(e.message ?: "Unknown error")
       }
